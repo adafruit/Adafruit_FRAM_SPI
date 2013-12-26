@@ -1,4 +1,21 @@
-Adafruit_FRAM_SPI
-=================
+#Adafruit SPI FRAM Driver #
 
-Driver for Adafruit's SPI-Based FRAM Breakouts
+This driver is for the Adafruit XXX.
+    ------> http://www.adafruit.com/products/xxx
+
+## About this Driver ##
+
+These modules use SPI to communicate, 4 pins are required to  
+interface
+
+Adafruit invests time and resources providing this open source code, 
+please support Adafruit and open-source hardware by purchasing 
+products from Adafruit!
+
+Written by Kevin (KTOWN) Townsend for Adafruit Industries.
+BSD license, check license.txt for more information
+All text above must be included in any redistribution
+
+To download. click the ZIP button in the top bar, and check this tutorial
+for instructions on how to install: 
+http://learn.adafruit.com/adafruit-all-about-arduino-libraries-install-use
