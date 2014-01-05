@@ -1,8 +1,8 @@
 #include <SPI.h>
 #include "Adafruit_FRAM_SPI.h"
 
-/* Example code for the Adafruit SPI1 FRAM breakout */
-uint8_t CS = 9;
+/* Example code for the Adafruit SPI FRAM breakout */
+uint8_t CS = 10;
 Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI(CS);
 uint16_t          addr = 0;
 
@@ -17,7 +17,9 @@ void setup(void) {
   }
   
   // Test write
-  // fram.write8(MB85RC_ADDRESS, addr, 0xAB);
+  fram.writeEnable(true);
+  fram.write8(addr, 0xAB);
+  fram.writeEnable(false);
 }
 
 void loop(void) {

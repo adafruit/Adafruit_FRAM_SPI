@@ -64,6 +64,8 @@ class Adafruit_FRAM_SPI {
   void     write8 (uint16_t addr, uint8_t value);
   uint8_t  read8  (uint16_t addr);
   void     getDeviceID(uint8_t *manufacturerID, uint16_t *productID);
+  uint8_t  getStatusRegister(void);
+  void     setStatusRegister(uint8_t value);
 
  private:
   boolean _framInitialised;

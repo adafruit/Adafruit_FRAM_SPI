@@ -116,8 +116,8 @@ void Adafruit_FRAM_SPI::write8 (uint16_t addr, uint8_t value)
 {
   digitalWrite(_cs, LOW);
   SPI.transfer(OPCODE_WRITE);
-  SPI.transfer(addr >> 8);
-  SPI.transfer(addr & 0xFF);
+  SPI.transfer((uint8_t)(addr >> 8));
+  SPI.transfer((uint8_t)(addr & 0xFF));
   SPI.transfer(value);
   /* CS on the rising edge commits the WRITE */
   digitalWrite(_cs, HIGH);
@@ -137,8 +137,8 @@ uint8_t Adafruit_FRAM_SPI::read8 (uint16_t addr)
 {
   digitalWrite(_cs, LOW);
   SPI.transfer(OPCODE_READ);
-  SPI.transfer(addr >> 8);
-  SPI.transfer(addr & 0xFF);
+  SPI.transfer((uint8_t)(addr >> 8));
+  SPI.transfer((uint8_t)(addr & 0xFF));
   uint8_t x = SPI.transfer(0);
   digitalWrite(_cs, HIGH);
   return x;
@@ -146,7 +146,7 @@ uint8_t Adafruit_FRAM_SPI::read8 (uint16_t addr)
 
 /**************************************************************************/
 /*!
-    @brief  Reads the Manufacturer ID and the Product ID frm the IC
+    @brief  Reads the Manufacturer ID and the Product ID from the IC
 
     @params[out]  manufacturerID
                   The 8-bit manufacturer ID (Fujitsu = 0x04)
@@ -173,4 +173,32 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID, uint16_t *productID
   /* See p.10 of http://www.fujitsu.com/downloads/MICRO/fsa/pdf/products/memory/fram/MB85RS64V-DS501-00015-4v0-E.pdf */
   *manufacturerID = (a[0]);
   *productID = (a[2] << 8) + a[3];
+}
+
+/**************************************************************************/
+/*!
+    @brief  Reads the status register
+*/
+/**************************************************************************/
+uint8_t Adafruit_FRAM_SPI::getStatusRegister(void)
+{
+  uint8_t reg = 0;
+  digitalWrite(_cs, LOW);
+  SPI.transfer(OPCODE_RDSR);
+  reg = SPI.transfer(0);
+  digitalWrite(_cs, HIGH);
+  return reg;
+}
+
+/**************************************************************************/
+/*!
+    @brief  Sets the status register
+*/
+/**************************************************************************/
+void Adafruit_FRAM_SPI::setStatusRegister(uint8_t value)
+{
+  digitalWrite(_cs, LOW);
+  SPI.transfer(OPCODE_WRSR);
+  SPI.transfer(value);
+  digitalWrite(_cs, HIGH);
 }
