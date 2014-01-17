@@ -51,7 +51,7 @@ typedef enum opcodes_e
   OPCODE_RDSR   = 0b0101,     /* Read Status Register */
   OPCODE_WRSR   = 0b0001,     /* Write Status Register */
   OPCODE_READ   = 0b0011,     /* Read Memory */
-  OPCODE_WRITE  = 0x0010,     /* Write Memory */
+  OPCODE_WRITE  = 0b0010,     /* Write Memory */
   OPCODE_RDID   = 0b10011111  /* Read Device ID */
 } opcodes_t;
 
