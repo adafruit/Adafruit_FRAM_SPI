@@ -2,8 +2,16 @@
 #include "Adafruit_FRAM_SPI.h"
 
 /* Example code for the Adafruit SPI FRAM breakout */
-uint8_t CS = 10;
-Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI(CS);
+uint8_t FRAM_CS = 10;
+
+//Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI(FRAM_CS);  // use hardware SPI
+
+uint8_t FRAM_SCK= 13;
+uint8_t FRAM_MISO = 12;
+uint8_t FRAM_MOSI = 11;
+//Or use software SPI, any pins!
+Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI(FRAM_SCK, FRAM_MISO, FRAM_MOSI, FRAM_CS);
+
 uint16_t          addr = 0;
 
 void setup(void) {

@@ -57,8 +57,9 @@ typedef enum opcodes_e
 
 class Adafruit_FRAM_SPI {
  public:
-  Adafruit_FRAM_SPI(uint8_t cs);
-  
+  Adafruit_FRAM_SPI(int8_t cs);
+  Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi, int8_t cs);
+
   boolean  begin  (void);
   void     writeEnable (bool enable);
   void     write8 (uint16_t addr, uint8_t value);
@@ -68,8 +69,10 @@ class Adafruit_FRAM_SPI {
   void     setStatusRegister(uint8_t value);
 
  private:
+  uint8_t  SPItransfer(uint8_t x);
+
   boolean _framInitialised;
-  uint8_t _cs;
+  int8_t _cs, _clk, _mosi, _miso;
 };
 
 #endif

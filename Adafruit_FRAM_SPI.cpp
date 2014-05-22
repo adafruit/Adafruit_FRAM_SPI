@@ -31,9 +31,16 @@
     Constructor
 */
 /**************************************************************************/
-Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(uint8_t cs) 
+Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs) 
 {
   _cs = cs;
+  _clk = _mosi = _miso = -1;
+  _framInitialised = false;
+}
+
+Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi, int8_t cs) 
+{
+  _cs = cs; _clk = clk; _mosi = mosi; _miso = miso;
   _framInitialised = false;
 }
 
@@ -53,24 +60,28 @@ boolean Adafruit_FRAM_SPI::begin(void)
   pinMode(_cs, OUTPUT);
   digitalWrite(_cs, HIGH);
 
-  SPI.begin();
-  SPI.setClockDivider(SPI_CLOCK_DIV128);
-  SPI.setDataMode(SPI_MODE0);
-  
+  if (_clk == -1) { // hardware SPI!
+    SPI.begin();
+    SPI.setClockDivider(SPI_CLOCK_DIV2); // highest speed!
+    SPI.setDataMode(SPI_MODE0);
+  } else {
+    pinMode(_clk, OUTPUT);
+    pinMode(_mosi, OUTPUT);
+    pinMode(_miso, INPUT);
+  }
+
   /* Make sure we're actually connected */
   uint8_t manufID;
   uint16_t prodID;
   getDeviceID(&manufID, &prodID);
   if (manufID != 0x04)
   {
-    Serial.print("Unexpected Manufacturer ID: 0x");
-    Serial.println(manufID, HEX);
+    //Serial.print("Unexpected Manufacturer ID: 0x"); Serial.println(manufID, HEX);
     return false;
   }
   if (prodID != 0x0302)
   {
-    Serial.print("Unexpected Product ID: 0x");
-    Serial.println(prodID, HEX);
+    //Serial.print("Unexpected Product ID: 0x"); Serial.println(prodID, HEX);
     return false;
   }
 
@@ -93,11 +104,11 @@ void Adafruit_FRAM_SPI::writeEnable (bool enable)
   digitalWrite(_cs, LOW);
   if (enable)
   {
-    SPI.transfer(OPCODE_WREN);
+    SPItransfer(OPCODE_WREN);
   }
   else
   {
-    SPI.transfer(OPCODE_WRDI);
+    SPItransfer(OPCODE_WRDI);
   }
   digitalWrite(_cs, HIGH);
 }
@@ -115,10 +126,10 @@ void Adafruit_FRAM_SPI::writeEnable (bool enable)
 void Adafruit_FRAM_SPI::write8 (uint16_t addr, uint8_t value)
 {
   digitalWrite(_cs, LOW);
-  SPI.transfer(OPCODE_WRITE);
-  SPI.transfer((uint8_t)(addr >> 8));
-  SPI.transfer((uint8_t)(addr & 0xFF));
-  SPI.transfer(value);
+  SPItransfer(OPCODE_WRITE);
+  SPItransfer((uint8_t)(addr >> 8));
+  SPItransfer((uint8_t)(addr & 0xFF));
+  SPItransfer(value);
   /* CS on the rising edge commits the WRITE */
   digitalWrite(_cs, HIGH);
 }
@@ -136,10 +147,10 @@ void Adafruit_FRAM_SPI::write8 (uint16_t addr, uint8_t value)
 uint8_t Adafruit_FRAM_SPI::read8 (uint16_t addr)
 {
   digitalWrite(_cs, LOW);
-  SPI.transfer(OPCODE_READ);
-  SPI.transfer((uint8_t)(addr >> 8));
-  SPI.transfer((uint8_t)(addr & 0xFF));
-  uint8_t x = SPI.transfer(0);
+  SPItransfer(OPCODE_READ);
+  SPItransfer((uint8_t)(addr >> 8));
+  SPItransfer((uint8_t)(addr & 0xFF));
+  uint8_t x = SPItransfer(0);
   digitalWrite(_cs, HIGH);
   return x;
 }
@@ -162,11 +173,11 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID, uint16_t *productID
   uint8_t results;
 
   digitalWrite(_cs, LOW);
-  SPI.transfer(OPCODE_RDID);
-  a[0] = SPI.transfer(0);
-  a[1] = SPI.transfer(0);
-  a[2] = SPI.transfer(0);
-  a[3] = SPI.transfer(0);
+  SPItransfer(OPCODE_RDID);
+  a[0] = SPItransfer(0);
+  a[1] = SPItransfer(0);
+  a[2] = SPItransfer(0);
+  a[3] = SPItransfer(0);
   digitalWrite(_cs, HIGH);
   
   /* Shift values to separate manuf and prod IDs */
@@ -184,8 +195,8 @@ uint8_t Adafruit_FRAM_SPI::getStatusRegister(void)
 {
   uint8_t reg = 0;
   digitalWrite(_cs, LOW);
-  SPI.transfer(OPCODE_RDSR);
-  reg = SPI.transfer(0);
+  SPItransfer(OPCODE_RDSR);
+  reg = SPItransfer(0);
   digitalWrite(_cs, HIGH);
   return reg;
 }
@@ -198,7 +209,25 @@ uint8_t Adafruit_FRAM_SPI::getStatusRegister(void)
 void Adafruit_FRAM_SPI::setStatusRegister(uint8_t value)
 {
   digitalWrite(_cs, LOW);
-  SPI.transfer(OPCODE_WRSR);
-  SPI.transfer(value);
+  SPItransfer(OPCODE_WRSR);
+  SPItransfer(value);
   digitalWrite(_cs, HIGH);
+}
+
+uint8_t Adafruit_FRAM_SPI::SPItransfer(uint8_t x) {
+  if (_clk == -1) {
+    return SPI.transfer(x);
+  } else {
+    // Serial.println("Software SPI");
+    uint8_t reply = 0;
+    for (int i=7; i>=0; i--) {
+      reply <<= 1;
+      digitalWrite(_clk, LOW);
+      digitalWrite(_mosi, x & (1<<i));
+      digitalWrite(_clk, HIGH);
+      if (digitalRead(_miso)) 
+	reply |= 1;
+    }
+    return reply;
+  }
 }
