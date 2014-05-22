@@ -1,7 +1,7 @@
 #Adafruit SPI FRAM Driver #
 
-This driver is for the Adafruit XXX.
-    ------> http://www.adafruit.com/products/xxx
+This driver is for the Adafruit SPI FRAM Breakout
+    ------> http://www.adafruit.com/products/1897
 
 ## About this Driver ##
 
