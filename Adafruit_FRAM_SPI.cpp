@@ -15,8 +15,8 @@
     v1.0 - First release
 */
 /**************************************************************************/
-#include <avr/pgmspace.h>
-#include <util/delay.h>
+//#include <avr/pgmspace.h>
+//#include <util/delay.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -62,7 +62,13 @@ boolean Adafruit_FRAM_SPI::begin(void)
 
   if (_clk == -1) { // hardware SPI!
     SPI.begin();
-    SPI.setClockDivider(SPI_CLOCK_DIV2); // highest speed!
+      
+#ifdef __SAM3X8E__
+    SPI.setClockDivider (9); // 9.3 MHz
+#else
+    SPI.setClockDivider (SPI_CLOCK_DIV2); // 8 MHz
+#endif
+      
     SPI.setDataMode(SPI_MODE0);
   } else {
     pinMode(_clk, OUTPUT);
