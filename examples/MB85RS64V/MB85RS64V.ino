@@ -33,6 +33,9 @@ void setup(void) {
   fram.write8(0x0, test+1);
   fram.writeEnable(false);
 
+  fram.writeEnable(true);
+  fram.write(0x1, (uint8_t *)"FTW!", 5);
+  fram.writeEnable(false);
 
   // dump the entire 8K of memory!
   uint8_t value;
