@@ -63,6 +63,7 @@ class Adafruit_FRAM_SPI {
   boolean  begin  (void);
   void     writeEnable (bool enable);
   void     write8 (uint16_t addr, uint8_t value);
+  void     write (uint16_t addr, const uint8_t *values, size_t count);
   uint8_t  read8  (uint16_t addr);
   void     getDeviceID(uint8_t *manufacturerID, uint16_t *productID);
   uint8_t  getStatusRegister(void);

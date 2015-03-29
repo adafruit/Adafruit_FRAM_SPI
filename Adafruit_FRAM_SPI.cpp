@@ -142,6 +142,32 @@ void Adafruit_FRAM_SPI::write8 (uint16_t addr, uint8_t value)
 
 /**************************************************************************/
 /*!
+    @brief  Writes count bytes starting at the specific FRAM address
+    
+    @params[in] addr
+                The 16-bit address to write to in FRAM memory
+    @params[in] values
+                The pointer to an array of 8-bit values to write starting at addr
+    @params[in] count
+                The number of bytes to write
+*/
+/**************************************************************************/
+void Adafruit_FRAM_SPI::write (uint16_t addr, const uint8_t *values, size_t count)
+{
+  digitalWrite(_cs, LOW);
+  SPItransfer(OPCODE_WRITE);
+  SPItransfer((uint8_t)(addr >> 8));
+  SPItransfer((uint8_t)(addr & 0xFF));
+  for (int i = 0; i < count; i++)
+  {
+    SPItransfer(values[i]);
+  }
+  /* CS on the rising edge commits the WRITE */
+  digitalWrite(_cs, HIGH);
+}
+
+/**************************************************************************/
+/*!
     @brief  Reads an 8 bit value from the specified FRAM address
 
     @params[in] addr
