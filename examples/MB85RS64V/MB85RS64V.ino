@@ -14,7 +14,16 @@ Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI(FRAM_SCK, FRAM_MISO, FRAM_MOSI, FRAM_
 
 uint16_t          addr = 0;
 
+#if defined(ARDUINO_ARCH_SAMD)
+// for Zero, output on USB Serial console, remove line below if using programming port to program the Zero!
+   #define Serial SerialUSB
+#endif
+
 void setup(void) {
+  #ifndef ESP8266
+    while (!Serial);     // will pause Zero, Leonardo, etc until serial console opens
+  #endif
+
   Serial.begin(9600);
   
   if (fram.begin()) {
