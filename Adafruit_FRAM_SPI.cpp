@@ -189,6 +189,32 @@ uint8_t Adafruit_FRAM_SPI::read8 (uint16_t addr)
 
 /**************************************************************************/
 /*!
+    @brief  Read count bytes starting at the specific FRAM address
+    
+    @params[in] addr
+                The 16-bit address to write to in FRAM memory
+    @params[out] values
+                The pointer to an array of 8-bit values to read starting at addr
+    @params[in] count
+                The number of bytes to read
+*/
+/**************************************************************************/
+void Adafruit_FRAM_SPI::read (uint16_t addr, uint8_t *values, size_t count)
+{
+  digitalWrite(_cs, LOW);
+  SPItransfer(OPCODE_READ);
+  SPItransfer((uint8_t)(addr >> 8));
+  SPItransfer((uint8_t)(addr & 0xFF));
+  for (int i = 0; i < count; i++)
+  {
+    uint8_t x = SPItransfer(0);
+    values[i] = x;
+  }
+  digitalWrite(_cs, HIGH);
+}
+
+/**************************************************************************/
+/*!
     @brief  Reads the Manufacturer ID and the Product ID from the IC
 
     @params[out]  manufacturerID
