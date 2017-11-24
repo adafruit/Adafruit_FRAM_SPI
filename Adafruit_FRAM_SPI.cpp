@@ -72,7 +72,7 @@ boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes)
 {
   if (cs == -1)
   {
-    //Serial.print("No cs pin specified");
+    Serial.println("No cs pin specified!");
     return false;
   }
 
@@ -88,8 +88,10 @@ boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes)
 
 #ifdef __SAM3X8E__
     SPI.setClockDivider (9); // 9.3 MHz
+#elif defined(STM32F2XX)
+	SPI.setClockDivider (SPI_CLOCK_DIV2); // Particle Photon top speed 36MHz
 #else
-    SPI.setClockDivider (SPI_CLOCK_DIV2); // 8 MHz
+	SPI.setClockDivider (SPI_CLOCK_DIV2); // 8 MHz
 #endif
 
     SPI.setDataMode(SPI_MODE0);
@@ -106,12 +108,12 @@ boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes)
 
   if (manufID != 0x04 && manufID != 0x7f)
   {
-    //Serial.print("Unexpected Manufacturer ID: 0x"); Serial.println(manufID, HEX);
+    Serial.print("Unexpected Manufacturer ID: 0x"); Serial.println(manufID, HEX);
     return false;
   }
   if (prodID != 0x0302 && prodID != 0x7f7f)
   {
-    //Serial.print("Unexpected Product ID: 0x"); Serial.println(prodID, HEX);
+    Serial.print("Unexpected Product ID: 0x"); Serial.println(prodID, HEX);
     return false;
   }
 

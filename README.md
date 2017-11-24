@@ -36,7 +36,7 @@ ATSAM21D           |      X       |             |            |
 ATtiny85 @ 16MHz   |             |             |     X       | 
 ATtiny85 @ 8MHz    |             |             |     X       | 
 Intel Curie @ 32MHz |             |             |     X       | 
-STM32F2            |             |             |     X       | 
+STM32F2            |      X      |             |             |STM32F205RGY6 
 
   * ATmega328 @ 16MHz : Arduino UNO, Adafruit Pro Trinket 5V, Adafruit Metro 328, Adafruit Metro Mini
   * ATmega328 @ 12MHz : Adafruit Pro Trinket 3V
@@ -48,5 +48,6 @@ STM32F2            |             |             |     X       |
   * ATSAM21D : Arduino Zero, M0 Pro
   * ATtiny85 @ 16MHz : Adafruit Trinket 5V
   * ATtiny85 @ 8MHz : Adafruit Gemma, Arduino Gemma, Adafruit Trinket 3V
+  * STM32F2 @ 120MHz : Particle Photon
 
 <!-- END COMPATIBILITY TABLE -->
