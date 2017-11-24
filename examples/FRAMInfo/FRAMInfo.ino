@@ -3,8 +3,7 @@
 
 /* Example code to interrogate Adafruit SPI FRAM breakout for address size and storage capacity */
 
-/* WARNING: Running this sketch will overwrite all existing data on the FRAM breakout */
-
+/* NOTE: This sketch is designed to preserve existing data on the FRAM breakout */
 
 uint8_t FRAM_CS = 10;
 Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI(FRAM_CS);  // use hardware SPI
@@ -24,18 +23,27 @@ uint32_t          memSize;
 #endif
 
 
-int32_t testReadBack(uint32_t addr, int32_t data) {
+int32_t readBack(uint32_t addr, int32_t data) {
   int32_t check = !data;
+  int32_t wrapCheck, backup;
+  fram.read(addr, (uint8_t*)&backup, sizeof(int32_t));
   fram.writeEnable(true);
-  fram.write(addr, (uint8_t*)&data, sizeof(data));
+  fram.write(addr, (uint8_t*)&data, sizeof(int32_t));
   fram.writeEnable(false);
-  fram.read(addr, (uint8_t*)&check, sizeof(check));
+  fram.read(addr, (uint8_t*)&check, sizeof(int32_t));
+  fram.read(0, (uint8_t*)&wrapCheck, sizeof(int32_t));
+  fram.writeEnable(true);
+  fram.write(addr, (uint8_t*)&backup, sizeof(int32_t));
+  fram.writeEnable(false);
+  // Check for warparound, address 0 will work anyway
+  if (wrapCheck==check)
+    check = 0;
   return check;
 }
 
 bool testAddrSize(uint8_t addrSize) {
   fram.setAddressSize(addrSize);
-  if (testReadBack(0, 0xbeefbead) == 0xbeefbead)
+  if (readBack(4, 0xbeefbead) == 0xbeefbead)
     return true;
   return false;
 }
@@ -54,7 +62,7 @@ void setup(void) {
     Serial.println("No SPI FRAM found ... check your connections\r\n");
     while (1);
   }
-  
+
   if (testAddrSize(2))
     addrSizeInBytes = 2;
   else if (testAddrSize(3))
@@ -65,22 +73,22 @@ void setup(void) {
     Serial.println("SPI FRAM can not be read/written with any address size\r\n");
     while (1);
   }
-
-  Serial.println("SPI FRAM address size is ");
-  Serial.println(addrSizeInBytes);
-  Serial.println(" bytes.");
   
   memSize = 0;
-  while (testReadBack(memSize, memSize) == memSize) {
-    memSize += 4;
+  while (readBack(memSize, memSize) == memSize) {
+    memSize += 256;
+    //Serial.print("Block: #"); Serial.println(memSize/256);
   }
   
+  Serial.print("SPI FRAM address size is ");
+  Serial.print(addrSizeInBytes);
+  Serial.println(" bytes.");
   Serial.println("SPI FRAM capacity appears to be..");
   Serial.print(memSize); Serial.println(" bytes");
-  Serial.print(memSize/0x1000); Serial.println(" KBytes");
-  Serial.print((memSize*8)/0x1000); Serial.println(" KBits");
-  if (memSize >= 0x100000) {
-    Serial.print((memSize*8)/0x100000); Serial.println(" MBits");
+  Serial.print(memSize/0x400); Serial.println(" kilobytes");
+  Serial.print((memSize*8)/0x400); Serial.println(" kilobits");
+  if (memSize >= (0x100000/8)) {
+    Serial.print((memSize*8)/0x100000); Serial.println(" megabits");
   }
 }
 
