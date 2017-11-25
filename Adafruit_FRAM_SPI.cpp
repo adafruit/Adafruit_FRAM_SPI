@@ -89,7 +89,10 @@ boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes)
 #ifdef __SAM3X8E__
     SPI.setClockDivider (9); // 9.3 MHz
 #elif defined(STM32F2XX)
-	SPI.setClockDivider (SPI_CLOCK_DIV2); // Particle Photon top speed 36MHz
+	// Is seems the photon SPI0 clock runs at 60MHz, but SPI1 runs at
+	// 30MHz, so the DIV will need to change if this is ever extended
+	// to cover SPI1
+	SPI.setClockDivider (SPI_CLOCK_DIV4); // Particle Photon SPI @ 15MHz
 #else
 	SPI.setClockDivider (SPI_CLOCK_DIV2); // 8 MHz
 #endif
