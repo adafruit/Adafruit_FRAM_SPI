@@ -3,10 +3,10 @@
 
 /* Example code to interrogate Adafruit SPI FRAM breakout for address size and storage capacity */
 
-/* NOTE: This sketch is designed to preserve existing data on the FRAM breakout */
+/* NOTE: This sketch will overwrite data already on the FRAM breakout */
 
 uint8_t FRAM_CS = 10;
-Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI(FRAM_CS);  // use hardware SPI
+Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI();  // use hardware SPI
 
 uint8_t FRAM_SCK = 13;
 uint8_t FRAM_MISO = 12;
@@ -56,7 +56,7 @@ void setup(void) {
 
   Serial.begin(9600);
   
-  if (fram.begin(addrSizeInBytes)) {
+  if (fram.begin(FRAM_CS, addrSizeInBytes)) {
     Serial.println("Found SPI FRAM");
   } else {
     Serial.println("No SPI FRAM found ... check your connections\r\n");
