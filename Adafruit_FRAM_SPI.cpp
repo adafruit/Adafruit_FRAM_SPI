@@ -72,7 +72,7 @@ boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes)
 {
   if (cs == -1)
   {
-    Serial.println("No cs pin specified!");
+    //Serial.println("No cs pin specified!");
     return false;
   }
 
@@ -108,12 +108,12 @@ boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes)
 
   if (manufID != 0x04 && manufID != 0x7f)
   {
-    Serial.print("Unexpected Manufacturer ID: 0x"); Serial.println(manufID, HEX);
+    //Serial.print("Unexpected Manufacturer ID: 0x"); Serial.println(manufID, HEX);
     return false;
   }
   if (prodID != 0x0302 && prodID != 0x7f7f)
   {
-    Serial.print("Unexpected Product ID: 0x"); Serial.println(prodID, HEX);
+    //Serial.print("Unexpected Product ID: 0x"); Serial.println(prodID, HEX);
     return false;
   }
 
