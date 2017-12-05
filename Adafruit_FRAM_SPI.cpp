@@ -161,6 +161,7 @@ void Adafruit_FRAM_SPI::writeEnable (bool enable)
 void Adafruit_FRAM_SPI::write8 (uint32_t addr, uint8_t value)
 {
   digitalWrite(_cs, LOW);
+  SPItransfer(OPCODE_WRITE);
   writeAddress(addr);
   SPItransfer(value);
   /* CS on the rising edge commits the WRITE */
