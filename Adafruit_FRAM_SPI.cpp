@@ -50,6 +50,50 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi, int8_
 }
 
 /*========================================================================*/
+/*                           SPI CLAIM UTILITY                            */
+/*========================================================================*/
+
+// Set SPI_FREQ based on empirical board maxima. The FRAM modules supports 20MHz.
+#if defined(SPI_FREQ)
+  // Specified by library user in compiler flags or pre-#define
+#elif defined(__SAM3X8E__)
+   #define SPI_FREQ 9300000 // 9.3 MHz
+#elif defined(STM32F2XX)
+	// Is seems the photon SPI0 clock runs at 60MHz, but SPI1 runs at
+	// 30MHz, so the DIV will need to change if this is ever extended
+	// to cover SPI1
+   #define SPI_FREQ 15000000 // Particle Photon SPI @ 15MHz
+#else
+   #define SPI_FREQ 8000000 // 8 MHz
+#endif
+
+// Use Resource acquisition is initialization (RAII)
+//   ClaimSPI working(cs, clk) // One statement before SPI use
+// - ctor will activate cs and begin SPI transaction
+// - dtor will close transaction and deactive cs at end of scope
+// Optimizing compiler inlines so there is no overhead for this simple
+// guarantee of consistency. See assembly here https://godbolt.org/g/ZvaRSG
+class ClaimSPI {
+ public:
+  ClaimSPI(int8_t cs, int8_t clk)
+  : _cs(cs), _hardwareSPI(clk==-1) {
+      digitalWrite(_cs, LOW);
+      if (_hardwareSPI) {
+        SPI.beginTransaction(SPISettings(SPI_FREQ, MSBFIRST, SPI_MODE0));
+      }
+  }
+  ~ClaimSPI() {
+      if (_hardwareSPI) {
+        SPI.endTransaction();
+      }
+      digitalWrite(_cs, HIGH);
+  }
+ private:
+  const int8_t _cs;
+  const bool _hardwareSPI;
+};
+
+/*========================================================================*/
 /*                           PUBLIC FUNCTIONS                             */
 /*========================================================================*/
 /**************************************************************************/
@@ -86,18 +130,6 @@ boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes)
   if (_clk == -1) { // hardware SPI!
     SPI.begin();
 
-#ifdef __SAM3X8E__
-    SPI.setClockDivider (9); // 9.3 MHz
-#elif defined(STM32F2XX)
-	// Is seems the photon SPI0 clock runs at 60MHz, but SPI1 runs at
-	// 30MHz, so the DIV will need to change if this is ever extended
-	// to cover SPI1
-	SPI.setClockDivider (SPI_CLOCK_DIV4); // Particle Photon SPI @ 15MHz
-#else
-	SPI.setClockDivider (SPI_CLOCK_DIV2); // 8 MHz
-#endif
-
-    SPI.setDataMode(SPI_MODE0);
   } else {
     pinMode(_clk, OUTPUT);
     pinMode(_mosi, OUTPUT);
@@ -136,7 +168,7 @@ boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes)
 /**************************************************************************/
 void Adafruit_FRAM_SPI::writeEnable (bool enable)
 {
-  digitalWrite(_cs, LOW);
+  ClaimSPI working(_cs, _clk);
   if (enable)
   {
     SPItransfer(OPCODE_WREN);
@@ -145,7 +177,6 @@ void Adafruit_FRAM_SPI::writeEnable (bool enable)
   {
     SPItransfer(OPCODE_WRDI);
   }
-  digitalWrite(_cs, HIGH);
 }
 
 /**************************************************************************/
@@ -160,12 +191,11 @@ void Adafruit_FRAM_SPI::writeEnable (bool enable)
 /**************************************************************************/
 void Adafruit_FRAM_SPI::write8 (uint32_t addr, uint8_t value)
 {
-  digitalWrite(_cs, LOW);
+  ClaimSPI working(_cs, _clk);
   SPItransfer(OPCODE_WRITE);
   writeAddress(addr);
   SPItransfer(value);
   /* CS on the rising edge commits the WRITE */
-  digitalWrite(_cs, HIGH);
 }
 
 /**************************************************************************/
@@ -182,7 +212,7 @@ void Adafruit_FRAM_SPI::write8 (uint32_t addr, uint8_t value)
 /**************************************************************************/
 void Adafruit_FRAM_SPI::write (uint32_t addr, const uint8_t *values, size_t count)
 {
-  digitalWrite(_cs, LOW);
+  ClaimSPI working(_cs, _clk);
   SPItransfer(OPCODE_WRITE);
   writeAddress(addr);
   for (size_t i = 0; i < count; i++)
@@ -190,7 +220,6 @@ void Adafruit_FRAM_SPI::write (uint32_t addr, const uint8_t *values, size_t coun
     SPItransfer(values[i]);
   }
   /* CS on the rising edge commits the WRITE */
-  digitalWrite(_cs, HIGH);
 }
 
 /**************************************************************************/
@@ -205,11 +234,10 @@ void Adafruit_FRAM_SPI::write (uint32_t addr, const uint8_t *values, size_t coun
 /**************************************************************************/
 uint8_t Adafruit_FRAM_SPI::read8 (uint32_t addr)
 {
-  digitalWrite(_cs, LOW);
+  ClaimSPI working(_cs, _clk);
   SPItransfer(OPCODE_READ);
   writeAddress(addr);
   uint8_t x = SPItransfer(0);
-  digitalWrite(_cs, HIGH);
   return x;
 }
 
@@ -227,7 +255,7 @@ uint8_t Adafruit_FRAM_SPI::read8 (uint32_t addr)
 /**************************************************************************/
 void Adafruit_FRAM_SPI::read (uint32_t addr, uint8_t *values, size_t count)
 {
-  digitalWrite(_cs, LOW);
+  ClaimSPI working(_cs, _clk);
   SPItransfer(OPCODE_READ);
   writeAddress(addr);
   for (size_t i = 0; i < count; i++)
@@ -235,7 +263,6 @@ void Adafruit_FRAM_SPI::read (uint32_t addr, uint8_t *values, size_t count)
     uint8_t x = SPItransfer(0);
     values[i] = x;
   }
-  digitalWrite(_cs, HIGH);
 }
 
 /**************************************************************************/
@@ -255,13 +282,14 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID, uint16_t *productID
   uint8_t a[4] = { 0, 0, 0, 0 };
   //uint8_t results;
 
-  digitalWrite(_cs, LOW);
-  SPItransfer(OPCODE_RDID);
-  a[0] = SPItransfer(0);
-  a[1] = SPItransfer(0);
-  a[2] = SPItransfer(0);
-  a[3] = SPItransfer(0);
-  digitalWrite(_cs, HIGH);
+  { // Create block in which SPI is claimed. Released at end of block.
+    ClaimSPI working(_cs, _clk);
+    SPItransfer(OPCODE_RDID);
+    a[0] = SPItransfer(0);
+    a[1] = SPItransfer(0);
+    a[2] = SPItransfer(0);
+    a[3] = SPItransfer(0);
+  }
 
   /* Shift values to separate manuf and prod IDs */
   /* See p.10 of http://www.fujitsu.com/downloads/MICRO/fsa/pdf/products/memory/fram/MB85RS64V-DS501-00015-4v0-E.pdf */
@@ -277,10 +305,9 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID, uint16_t *productID
 uint8_t Adafruit_FRAM_SPI::getStatusRegister(void)
 {
   uint8_t reg = 0;
-  digitalWrite(_cs, LOW);
+  ClaimSPI working(_cs, _clk);
   SPItransfer(OPCODE_RDSR);
   reg = SPItransfer(0);
-  digitalWrite(_cs, HIGH);
   return reg;
 }
 
@@ -291,10 +318,9 @@ uint8_t Adafruit_FRAM_SPI::getStatusRegister(void)
 /**************************************************************************/
 void Adafruit_FRAM_SPI::setStatusRegister(uint8_t value)
 {
-  digitalWrite(_cs, LOW);
+  ClaimSPI working(_cs, _clk);
   SPItransfer(OPCODE_WRSR);
   SPItransfer(value);
-  digitalWrite(_cs, HIGH);
 }
 
 void Adafruit_FRAM_SPI::setAddressSize(uint8_t nAddressSize)
