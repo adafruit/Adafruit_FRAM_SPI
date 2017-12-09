@@ -77,16 +77,16 @@ class ClaimSPI {
  public:
   ClaimSPI(int8_t cs, int8_t clk)
   : _cs(cs), _hardwareSPI(clk==-1) {
-      digitalWrite(_cs, LOW);
       if (_hardwareSPI) {
         SPI.beginTransaction(SPISettings(SPI_FREQ, MSBFIRST, SPI_MODE0));
       }
+      digitalWrite(_cs, LOW);
   }
   ~ClaimSPI() {
+      digitalWrite(_cs, HIGH);
       if (_hardwareSPI) {
         SPI.endTransaction();
       }
-      digitalWrite(_cs, HIGH);
   }
  private:
   const int8_t _cs;
