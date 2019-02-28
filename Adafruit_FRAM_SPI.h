@@ -81,6 +81,10 @@ class Adafruit_FRAM_SPI {
   boolean _framInitialised;
   uint8_t  _nAddressSizeBytes;
   int8_t _cs, _clk, _mosi, _miso;
+
+  #if defined(SPI_HAS_TRANSACTION)
+  SPISettings spiSettings;
+  #endif
 };
 
 #endif
