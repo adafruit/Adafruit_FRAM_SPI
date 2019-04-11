@@ -17,12 +17,6 @@ uint8_t FRAM_MOSI = 11;
 uint8_t           addrSizeInBytes = 2; //Default to address size of two bytes
 uint32_t          memSize;
 
-#if defined(ARDUINO_ARCH_SAMD)
-// for Zero, output on USB Serial console, remove line below if using programming port to program the Zero!
-   #define Serial SerialUSB
-#endif
-
-
 int32_t readBack(uint32_t addr, int32_t data) {
   int32_t check = !data;
   int32_t wrapCheck, backup;
