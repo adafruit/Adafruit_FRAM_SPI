@@ -32,14 +32,23 @@
 
 #include "Adafruit_FRAM_SPI.h"
 
-#define SPI_TRANSACTION_START                                                  \
-  if (_clk == -1) {                                                            \
-    _spi->beginTransaction(spiSettings);                                       \
+/*!
+ *  @brief  If class instance uses hardware SPI, beginTransaction
+ */
+void Adafruit_FRAM_SPI::SPI_TRANSACTION_START() {
+  if (_clk == -1) {
+    _spi->beginTransaction(spiSettings);
   } ///< Pre-SPI
-#define SPI_TRANSACTION_END                                                    \
-  if (_clk == -1) {                                                            \
-    _spi->endTransaction();                                                    \
+}
+
+/*!
+ *  @brief  If class instance uses hardware SPI, endTransaction
+ */
+void Adafruit_FRAM_SPI::SPI_TRANSACTION_END() {
+  if (_clk == -1) {
+    _spi->endTransaction();
   } ///< Post-SPI
+}
 
 /*!
  *  @brief  Instantiates a new SPI FRAM class using hardware SPI
@@ -52,7 +61,7 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI = &SPI) {
   _cs = cs;
   _clk = _mosi = _miso = -1;
   _framInitialised = false;
-  _spi = theSPI;
+  *_spi = *theSPI;
 }
 
 /*!
@@ -78,37 +87,16 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi,
 /*!
  *  @brief  Initializes SPI and configures the chip (call this function before
  *          doing anything else)
- *  @return true if succesful
- */
-boolean Adafruit_FRAM_SPI::begin() { return begin(_cs, 2); }
-
-/*!
- *  @brief  Initializes SPI and configures the chip (call this function before
- *          doing anything else)
  *  @param  nAddressSizeBytes
- *          address size in bytes
+ *          sddress size in bytes (default 2)
  *  @return true if succesful
  */
 boolean Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
-  return begin(_cs, nAddressSizeBytes);
-}
-
-/*!
- *  @brief  Initializes SPI and configures the chip (call this function before
- *          doing anything else)
- *  @param  cs
- *          cs pin num
- *  @param  nAddressSizeBytes
- *          sddress size in bytes
- *  @return true if succesful
- */
-boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes) {
-  if (cs == -1) {
+  if (_cs == -1) {
     // Serial.println("No cs pin specified!");
     return false;
   }
 
-  _cs = cs;
   setAddressSize(nAddressSizeBytes);
 
   /* Configure SPI */
@@ -153,7 +141,7 @@ boolean Adafruit_FRAM_SPI::begin(int8_t cs, uint8_t nAddressSizeBytes) {
             True enables writes, false disables writes
 */
 void Adafruit_FRAM_SPI::writeEnable(bool enable) {
-  SPI_TRANSACTION_START
+  SPI_TRANSACTION_START();
   digitalWrite(_cs, LOW);
   if (enable) {
     SPItransfer(OPCODE_WREN);
@@ -161,7 +149,7 @@ void Adafruit_FRAM_SPI::writeEnable(bool enable) {
     SPItransfer(OPCODE_WRDI);
   }
   digitalWrite(_cs, HIGH);
-  SPI_TRANSACTION_END
+  SPI_TRANSACTION_END();
 }
 
 /*!
@@ -172,14 +160,14 @@ void Adafruit_FRAM_SPI::writeEnable(bool enable) {
  *         The 8-bit value to write at framAddr
  */
 void Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
-  SPI_TRANSACTION_START
+  SPI_TRANSACTION_START();
   digitalWrite(_cs, LOW);
   SPItransfer(OPCODE_WRITE);
   writeAddress(addr);
   SPItransfer(value);
   /* CS on the rising edge commits the WRITE */
   digitalWrite(_cs, HIGH);
-  SPI_TRANSACTION_END
+  SPI_TRANSACTION_END();
 }
 
 /*!
@@ -193,7 +181,7 @@ void Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
  */
 void Adafruit_FRAM_SPI::write(uint32_t addr, const uint8_t *values,
                               size_t count) {
-  SPI_TRANSACTION_START
+  SPI_TRANSACTION_START();
   digitalWrite(_cs, LOW);
   SPItransfer(OPCODE_WRITE);
   writeAddress(addr);
@@ -202,7 +190,7 @@ void Adafruit_FRAM_SPI::write(uint32_t addr, const uint8_t *values,
   }
   /* CS on the rising edge commits the WRITE */
   digitalWrite(_cs, HIGH);
-  SPI_TRANSACTION_END
+  SPI_TRANSACTION_END();
 }
 
 /*!
@@ -212,13 +200,13 @@ void Adafruit_FRAM_SPI::write(uint32_t addr, const uint8_t *values,
  *   @return The 8-bit value retrieved at framAddr
  */
 uint8_t Adafruit_FRAM_SPI::read8(uint32_t addr) {
-  SPI_TRANSACTION_START
+  SPI_TRANSACTION_START();
   digitalWrite(_cs, LOW);
   SPItransfer(OPCODE_READ);
   writeAddress(addr);
   uint8_t x = SPItransfer(0);
   digitalWrite(_cs, HIGH);
-  SPI_TRANSACTION_END
+  SPI_TRANSACTION_END();
 
   return x;
 }
@@ -233,7 +221,7 @@ uint8_t Adafruit_FRAM_SPI::read8(uint32_t addr) {
  *           The number of bytes to read
  */
 void Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
-  SPI_TRANSACTION_START
+  SPI_TRANSACTION_START();
   digitalWrite(_cs, LOW);
   SPItransfer(OPCODE_READ);
   writeAddress(addr);
@@ -242,7 +230,7 @@ void Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
     values[i] = x;
   }
   digitalWrite(_cs, HIGH);
-  SPI_TRANSACTION_END
+  SPI_TRANSACTION_END();
 }
 
 /*!
@@ -259,7 +247,7 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
   uint8_t a[4] = {0, 0, 0, 0};
   // uint8_t results;
 
-  SPI_TRANSACTION_START
+  SPI_TRANSACTION_START();
   digitalWrite(_cs, LOW);
   SPItransfer(OPCODE_RDID);
   a[0] = SPItransfer(0);
@@ -267,7 +255,7 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
   a[2] = SPItransfer(0);
   a[3] = SPItransfer(0);
   digitalWrite(_cs, HIGH);
-  SPI_TRANSACTION_END
+  SPI_TRANSACTION_END();
 
   /* Shift values to separate manuf and prod IDs */
   /* See p.10 of
@@ -284,12 +272,12 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
 uint8_t Adafruit_FRAM_SPI::getStatusRegister() {
   uint8_t reg = 0;
 
-  SPI_TRANSACTION_START
+  SPI_TRANSACTION_START();
   digitalWrite(_cs, LOW);
   SPItransfer(OPCODE_RDSR);
   reg = SPItransfer(0);
   digitalWrite(_cs, HIGH);
-  SPI_TRANSACTION_END
+  SPI_TRANSACTION_END();
 
   return reg;
 }
@@ -300,12 +288,12 @@ uint8_t Adafruit_FRAM_SPI::getStatusRegister() {
  *           value that will be set
  */
 void Adafruit_FRAM_SPI::setStatusRegister(uint8_t value) {
-  SPI_TRANSACTION_START
+  SPI_TRANSACTION_START();
   digitalWrite(_cs, LOW);
   SPItransfer(OPCODE_WRSR);
   SPItransfer(value);
   digitalWrite(_cs, HIGH);
-  SPI_TRANSACTION_END
+  SPI_TRANSACTION_END();
 }
 
 /*!

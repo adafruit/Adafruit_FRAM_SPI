@@ -56,7 +56,7 @@ void setup(void) {
 
   Serial.begin(9600);
   
-  if (fram.begin(FRAM_CS, addrSizeInBytes)) {
+  if (fram.begin(addrSizeInBytes)) {
     Serial.println("Found SPI FRAM");
   } else {
     Serial.println("No SPI FRAM found ... check your connections\r\n");

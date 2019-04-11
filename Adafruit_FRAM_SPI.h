@@ -45,9 +45,7 @@ public:
   Adafruit_FRAM_SPI(int8_t cs = -1, SPIClass *theSPI = &SPI);
   Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi, int8_t cs);
 
-  boolean begin();
-  boolean begin(uint8_t nAddressSizeBytes);
-  boolean begin(int8_t cs, uint8_t nAddressSizeBytes);
+  boolean begin(uint8_t nAddressSizeBytes = 2);
   void writeEnable(bool enable);
   void write8(uint32_t addr, uint8_t value);
   void write(uint32_t addr, const uint8_t *values, size_t count);
@@ -57,6 +55,9 @@ public:
   uint8_t getStatusRegister(void);
   void setStatusRegister(uint8_t value);
   void setAddressSize(uint8_t nAddressSize);
+
+  void SPI_TRANSACTION_START();
+  void SPI_TRANSACTION_END();
 
 private:
   uint8_t SPItransfer(uint8_t x);
