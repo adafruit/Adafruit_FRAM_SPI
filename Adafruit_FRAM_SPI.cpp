@@ -57,7 +57,7 @@ void Adafruit_FRAM_SPI::SPI_TRANSACTION_END() {
  *  @param  *theSPI
  *          SPI optional object
  */
-Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI = &SPI) {
+Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
   _cs = cs;
   _clk = _mosi = _miso = -1;
   _framInitialised = false;
