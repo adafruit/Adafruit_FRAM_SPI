@@ -15,11 +15,8 @@ Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI(FRAM_SCK, FRAM_MISO, FRAM_MOSI, FRAM_
 uint16_t          addr = 0;
 
 void setup(void) {
-  #ifndef ESP8266
-    while (!Serial);     // will pause Zero, Leonardo, etc until serial console opens
-  #endif
-
   Serial.begin(9600);
+  while (!Serial) delay(10);     // will pause Zero, Leonardo, etc until serial console opens
   
   if (fram.begin()) {
     Serial.println("Found SPI FRAM");
