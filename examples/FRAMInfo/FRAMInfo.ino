@@ -44,11 +44,9 @@ bool testAddrSize(uint8_t addrSize) {
 
 
 void setup(void) {
-  #ifndef ESP8266
-    while (!Serial);     // will pause Zero, Leonardo, etc until serial console opens
-  #endif
-
   Serial.begin(9600);
+
+  while (!Serial) delay(10);     // will pause Zero, Leonardo, etc until serial console opens
   
   if (fram.begin(addrSizeInBytes)) {
     Serial.println("Found SPI FRAM");

@@ -22,7 +22,7 @@
 #define _ADAFRUIT_FRAM_SPI_H_
 
 #include <Arduino.h>
-
+#include <Adafruit_SPIDevice.h>
 #include <SPI.h>
 
 /** Operation Codes **/
@@ -48,7 +48,7 @@ public:
   boolean begin(uint8_t nAddressSizeBytes = 2);
   void writeEnable(bool enable);
   void write8(uint32_t addr, uint8_t value);
-  void write(uint32_t addr, const uint8_t *values, size_t count);
+  void write(uint32_t addr, uint8_t *values, size_t count);
   uint8_t read8(uint32_t addr);
   void read(uint32_t addr, uint8_t *values, size_t count);
   void getDeviceID(uint8_t *manufacturerID, uint16_t *productID);
@@ -56,19 +56,11 @@ public:
   void setStatusRegister(uint8_t value);
   void setAddressSize(uint8_t nAddressSize);
 
-  void SPI_TRANSACTION_START();
-  void SPI_TRANSACTION_END();
-
 private:
-  uint8_t SPItransfer(uint8_t x);
-  void writeAddress(uint32_t addr);
+  Adafruit_SPIDevice *spi_dev = NULL;
 
   boolean _framInitialised;
   uint8_t _nAddressSizeBytes;
-  int8_t _cs, _clk, _mosi, _miso;
-  SPIClass *_spi;
-
-  SPISettings spiSettings;
 };
 
 #endif
