@@ -41,7 +41,7 @@
  */
 Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
   spi_dev = new Adafruit_SPIDevice(cs, 1000000, SPI_BITORDER_MSBFIRST,
-				   SPI_MODE0, theSPI);
+                                   SPI_MODE0, theSPI);
   _framInitialised = false;
 }
 
@@ -58,9 +58,8 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
  */
 Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi,
                                      int8_t cs) {
-  spi_dev = new Adafruit_SPIDevice(cs, clk, miso, mosi,
-				   1000000, SPI_BITORDER_MSBFIRST,
-				   SPI_MODE0);
+  spi_dev = new Adafruit_SPIDevice(cs, clk, miso, mosi, 1000000,
+                                   SPI_BITORDER_MSBFIRST, SPI_MODE0);
   _framInitialised = false;
 }
 
@@ -75,7 +74,7 @@ boolean Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   setAddressSize(nAddressSizeBytes);
 
   /* Configure SPI */
-  if (! spi_dev->begin()) {
+  if (!spi_dev->begin()) {
     return false;
   }
 
@@ -85,8 +84,8 @@ boolean Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   getDeviceID(&manufID, &prodID);
 
   if (manufID != 0x04 && manufID != 0x7f) {
-     Serial.print("Unexpected Manufacturer ID: 0x"); Serial.println(manufID,
-    HEX);
+    Serial.print("Unexpected Manufacturer ID: 0x");
+    Serial.println(manufID, HEX);
     return false;
   }
   if (prodID != 0x0302 && prodID != 0x7f7f) {
@@ -125,7 +124,7 @@ void Adafruit_FRAM_SPI::writeEnable(bool enable) {
  */
 void Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
   uint8_t buffer[10];
-  uint8_t i=0;
+  uint8_t i = 0;
 
   buffer[i++] = OPCODE_WRITE;
   if (_nAddressSizeBytes > 3)
@@ -133,7 +132,7 @@ void Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
   if (_nAddressSizeBytes > 2)
     buffer[i++] = (uint8_t)(addr >> 16);
   buffer[i++] = (uint8_t)(addr >> 8);
-  buffer[i++] = (uint8_t)(addr  & 0xFF);
+  buffer[i++] = (uint8_t)(addr & 0xFF);
   buffer[i++] = value;
 
   spi_dev->write(buffer, i);
@@ -148,10 +147,9 @@ void Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
  *   @param count
  *           The number of bytes to write
  */
-void Adafruit_FRAM_SPI::write(uint32_t addr, uint8_t *values,
-                              size_t count) {
+void Adafruit_FRAM_SPI::write(uint32_t addr, uint8_t *values, size_t count) {
   uint8_t prebuf[10];
-  uint8_t i=0;
+  uint8_t i = 0;
 
   prebuf[i++] = OPCODE_WRITE;
   if (_nAddressSizeBytes > 3)
@@ -159,7 +157,7 @@ void Adafruit_FRAM_SPI::write(uint32_t addr, uint8_t *values,
   if (_nAddressSizeBytes > 2)
     prebuf[i++] = (uint8_t)(addr >> 16);
   prebuf[i++] = (uint8_t)(addr >> 8);
-  prebuf[i++] = (uint8_t)(addr  & 0xFF);
+  prebuf[i++] = (uint8_t)(addr & 0xFF);
 
   spi_dev->write(values, count, prebuf, i);
 }
@@ -172,7 +170,7 @@ void Adafruit_FRAM_SPI::write(uint32_t addr, uint8_t *values,
  */
 uint8_t Adafruit_FRAM_SPI::read8(uint32_t addr) {
   uint8_t buffer[10], val;
-  uint8_t i=0;
+  uint8_t i = 0;
 
   buffer[i++] = OPCODE_READ;
   if (_nAddressSizeBytes > 3)
@@ -180,7 +178,7 @@ uint8_t Adafruit_FRAM_SPI::read8(uint32_t addr) {
   if (_nAddressSizeBytes > 2)
     buffer[i++] = (uint8_t)(addr >> 16);
   buffer[i++] = (uint8_t)(addr >> 8);
-  buffer[i++] = (uint8_t)(addr  & 0xFF);
+  buffer[i++] = (uint8_t)(addr & 0xFF);
 
   spi_dev->write_then_read(buffer, i, &val, 1);
 
@@ -198,7 +196,7 @@ uint8_t Adafruit_FRAM_SPI::read8(uint32_t addr) {
  */
 void Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
   uint8_t buffer[10];
-  uint8_t i=0;
+  uint8_t i = 0;
 
   buffer[i++] = OPCODE_READ;
   if (_nAddressSizeBytes > 3)
@@ -206,7 +204,7 @@ void Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
   if (_nAddressSizeBytes > 2)
     buffer[i++] = (uint8_t)(addr >> 16);
   buffer[i++] = (uint8_t)(addr >> 8);
-  buffer[i++] = (uint8_t)(addr  & 0xFF);
+  buffer[i++] = (uint8_t)(addr & 0xFF);
 
   spi_dev->write_then_read(buffer, i, values, count);
 }
@@ -224,7 +222,7 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
                                     uint16_t *productID) {
   uint8_t cmd = OPCODE_RDID;
   uint8_t a[4] = {0, 0, 0, 0};
-  
+
   spi_dev->write_then_read(&cmd, 1, a, 4);
 
   /* Shift values to separate manuf and prod IDs */

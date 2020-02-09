@@ -21,8 +21,8 @@
 #ifndef _ADAFRUIT_FRAM_SPI_H_
 #define _ADAFRUIT_FRAM_SPI_H_
 
-#include <Arduino.h>
 #include <Adafruit_SPIDevice.h>
+#include <Arduino.h>
 #include <SPI.h>
 
 /** Operation Codes **/
