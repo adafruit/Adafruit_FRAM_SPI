@@ -61,7 +61,7 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
   _cs = cs;
   _clk = _mosi = _miso = -1;
   _framInitialised = false;
-  *_spi = *theSPI;
+  _spi = theSPI;
 }
 
 /*!
@@ -106,8 +106,8 @@ boolean Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   if (_clk == -1) { // hardware SPI!
     _spi->begin();
     spiSettings =
-        SPISettings(20000000, MSBFIRST,
-                    SPI_MODE0); // Max SPI frequency for MB85RS64V is 20 MHz
+        SPISettings(12000000, MSBFIRST,
+                    SPI_MODE0); // Max SPI frequency to 12MHz
   } else {
     pinMode(_clk, OUTPUT);
     pinMode(_mosi, OUTPUT);
