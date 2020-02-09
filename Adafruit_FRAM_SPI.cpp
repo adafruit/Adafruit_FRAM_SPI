@@ -105,9 +105,8 @@ boolean Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
 
   if (_clk == -1) { // hardware SPI!
     _spi->begin();
-    spiSettings =
-        SPISettings(12000000, MSBFIRST,
-                    SPI_MODE0); // Max SPI frequency to 12MHz
+    spiSettings = SPISettings(12000000, MSBFIRST,
+                              SPI_MODE0); // Max SPI frequency to 12MHz
   } else {
     pinMode(_clk, OUTPUT);
     pinMode(_mosi, OUTPUT);
