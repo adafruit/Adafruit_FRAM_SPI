@@ -35,9 +35,9 @@
 /*!
  *  @brief  Instantiates a new SPI FRAM class using hardware SPI
  *  @param  cs
- *          optional cs pin number
+ *          Required chip select pin number
  *  @param  *theSPI
- *          SPI optional object
+ *          SPI interface object, defaults to &SPI
  */
 Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
   spi_dev = new Adafruit_SPIDevice(cs, 1000000, SPI_BITORDER_MSBFIRST,
@@ -84,8 +84,8 @@ boolean Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   getDeviceID(&manufID, &prodID);
 
   if (manufID != 0x04 && manufID != 0x7f) {
-    Serial.print("Unexpected Manufacturer ID: 0x");
-    Serial.println(manufID, HEX);
+    // Serial.print("Unexpected Manufacturer ID: 0x");
+    // Serial.println(manufID, HEX);
     return false;
   }
   if (prodID != 0x0302 && prodID != 0x7f7f) {
