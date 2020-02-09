@@ -6,7 +6,7 @@
 /* NOTE: This sketch will overwrite data already on the FRAM breakout */
 
 uint8_t FRAM_CS = 10;
-Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI();  // use hardware SPI
+Adafruit_FRAM_SPI fram = Adafruit_FRAM_SPI(FRAM_CS);  // use hardware SPI
 
 uint8_t FRAM_SCK = 13;
 uint8_t FRAM_MISO = 12;
