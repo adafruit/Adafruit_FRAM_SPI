@@ -1,4 +1,4 @@
-## Adafruit SPI FRAM Driver [![Build Status](https://github.com/adafruit/Adafruit_FRAM_SPI/workflows/Arduino%20Library%20CI/badge.svg)(https://github.com/adafruit/Adafruit_FRAM_SPI/actions)
+## Adafruit SPI FRAM Driver [![Build Status](https://github.com/adafruit/Adafruit_FRAM_SPI/workflows/Arduino%20Library%20CI/badge.svg)(https://github.com/adafruit/Adafruit_FRAM_SPI/actions)[![Documentation](https://github.com/adafruit/ci-arduino/blob/master/assets/doxygen_badge.svg)](http://adafruit.github.io/Adafruit_FRAM_SPI/html/index.html)
 
 <a href="http://www.adafruit.com/products/1897"><img src="assets/board.jpg?raw=true" width="500px"></a>
 
