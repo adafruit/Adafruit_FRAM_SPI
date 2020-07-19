@@ -40,6 +40,10 @@
  *          SPI interface object, defaults to &SPI
  */
 Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
+  if (spi_dev) {
+    delete spi_dev;
+  }
+
   spi_dev = new Adafruit_SPIDevice(cs, 1000000, SPI_BITORDER_MSBFIRST,
                                    SPI_MODE0, theSPI);
   _framInitialised = false;
@@ -58,6 +62,10 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
  */
 Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi,
                                      int8_t cs) {
+  if (spi_dev) {
+    delete spi_dev;
+  }
+
   spi_dev = new Adafruit_SPIDevice(cs, clk, miso, mosi, 1000000,
                                    SPI_BITORDER_MSBFIRST, SPI_MODE0);
   _framInitialised = false;
@@ -70,7 +78,7 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi,
  *          sddress size in bytes (default 2)
  *  @return true if succesful
  */
-boolean Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
+bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   setAddressSize(nAddressSizeBytes);
 
   /* Configure SPI */
@@ -83,13 +91,15 @@ boolean Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   uint16_t prodID;
   getDeviceID(&manufID, &prodID);
 
-  if (manufID != 0x04 && manufID != 0x7f) {
-    // Serial.print("Unexpected Manufacturer ID: 0x");
-    // Serial.println(manufID, HEX);
+  if ((manufID != 0x04) && (manufID != 0x7f)) {
+    Serial.print(F("Unexpected Manufacturer ID: 0x"));
+    Serial.println(manufID, HEX);
     return false;
   }
-  if (prodID != 0x0302 && prodID != 0x7f7f) {
-    // Serial.print("Unexpected Product ID: 0x"); Serial.println(prodID, HEX);
+  if ((prodID != 0x0302) && (prodID != 0x7f7f) && (prodID != 0x4903) &&
+      (prodID != 0x4803)) {
+    Serial.print(F("Unexpected Product ID: 0x"));
+    Serial.println(prodID, HEX);
     return false;
   }
 
