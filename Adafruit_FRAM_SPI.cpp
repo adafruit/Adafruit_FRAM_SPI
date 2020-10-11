@@ -97,7 +97,7 @@ bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
     return false;
   }
   if ((prodID != 0x0302) && (prodID != 0x7f7f) && (prodID != 0x4903) &&
-      (prodID != 0x4803)) {
+      (prodID != 0x4803) && (prodID != 0x0101)) {
     Serial.print(F("Unexpected Product ID: 0x"));
     Serial.println(prodID, HEX);
     return false;
