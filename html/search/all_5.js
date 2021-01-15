@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['setaddresssize',['setAddressSize',['../class_adafruit___f_r_a_m___s_p_i.html#a4943a931744adbe344714c21151f4ad9',1,'Adafruit_FRAM_SPI']]],
-  ['setstatusregister',['setStatusRegister',['../class_adafruit___f_r_a_m___s_p_i.html#a1dc7c37c9e8759f248be135d5c697cae',1,'Adafruit_FRAM_SPI']]]
+  ['opcodes_5fe',['opcodes_e',['../_adafruit___f_r_a_m___s_p_i_8h.html#a868f2e58066cd53f92f779ce01fdcf60',1,'Adafruit_FRAM_SPI.h']]],
+  ['opcodes_5ft',['opcodes_t',['../_adafruit___f_r_a_m___s_p_i_8h.html#a6fddff330b441085189a98bfd4e7738e',1,'Adafruit_FRAM_SPI.h']]]
 ];
