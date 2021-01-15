@@ -33,8 +33,8 @@
 #include "Adafruit_FRAM_SPI.h"
 
 const struct {
-  uint8_t manufID;
-  uint16_t prodID;
+  uint8_t manufID; // Manufacture ID
+  uint16_t prodID; // Product ID
 } _supported_devices[] = {
     // Sorted in numerical order
     // Fujitsu
@@ -51,6 +51,14 @@ const struct {
     {0xAE, 0x8305} // MR45V064B
 };
 
+/*!
+ *  @brief  Check if the flash device is supported
+ *  @param  manufID
+ *          ManufactureID to be checked
+ *  @param  prodID
+ *          ProductID to be checked
+ *  @return true if supported
+ */
 static bool check_supported_device(uint8_t manufID, uint16_t prodID) {
   for (uint8_t i = 0;
        i < sizeof(_supported_devices) / sizeof(_supported_devices[0]); i++) {
@@ -111,7 +119,7 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi,
  *          doing anything else)
  *  @param  nAddressSizeBytes
  *          sddress size in bytes (default 2)
- *  @return true if succesful
+ *  @return true if successful
  */
 bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   setAddressSize(nAddressSizeBytes);
