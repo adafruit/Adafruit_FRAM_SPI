@@ -32,6 +32,41 @@
 
 #include "Adafruit_FRAM_SPI.h"
 
+const struct {
+  uint8_t manufID;
+  uint16_t prodID;
+} _supported_devices[] = {
+    // Sorted in numerical order
+    // Fujitsu
+    {0x04, 0x0101}, // MB85RS16
+    {0x04, 0x0302}, // MB85RS64V
+    {0x04, 0x2303}, // MB85RS64T
+    {0x04, 0x4803}, // MB85RS2MTA
+    {0x04, 0x4903}, // MB85RS4MT
+
+    // Cypress
+    {0x7F, 0x7F7f}, // FM25V02
+
+    // Lapis
+    {0xAE, 0x8305} // MR45V064B
+};
+
+static bool check_supported_device(uint8_t manufID, uint16_t prodID) {
+  for (uint8_t i = 0;
+       i < sizeof(_supported_devices) / sizeof(_supported_devices[0]); i++) {
+    if (manufID == _supported_devices[i].manufID &&
+        prodID == _supported_devices[i].prodID)
+      return true;
+  }
+
+  Serial.print(F("Unexpected Device: Manufacturer ID = 0x"));
+  Serial.print(manufID, HEX);
+  Serial.print(F(", Product ID = 0x"));
+  Serial.println(prodID, HEX);
+
+  return false;
+}
+
 /*!
  *  @brief  Instantiates a new SPI FRAM class using hardware SPI
  *  @param  cs
@@ -91,23 +126,10 @@ bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   uint16_t prodID;
   getDeviceID(&manufID, &prodID);
 
-  if ((manufID != 0x04) && (manufID != 0x7f) && (manufID != 0xae)) {
-    Serial.print(F("Unexpected Manufacturer ID: 0x"));
-    Serial.println(manufID, HEX);
-    return false;
-  }
-  if ((prodID != 0x0302) && (prodID != 0x7f7f) && (prodID != 0x4903) &&
-      (prodID != 0x4803) && (prodID != 0x0101) && (prodID != 0x2303) &&
-      (prodID != 0x8305)) {
-    Serial.print(F("Unexpected Product ID: 0x"));
-    Serial.println(prodID, HEX);
-    return false;
-  }
-
   /* Everything seems to be properly initialised and connected */
-  _framInitialised = true;
+  _framInitialised = check_supported_device(manufID, prodID);
 
-  return true;
+  return _framInitialised;
 }
 
 /*!
@@ -236,17 +258,14 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
 
   spi_dev->write_then_read(&cmd, 1, a, 4);
 
-  /* Shift values to separate manuf and prod IDs */
-  /* See p.10 of
-   * http://www.fujitsu.com/downloads/MICRO/fsa/pdf/products/memory/fram/MB85RS64V-DS501-00015-4v0-E.pdf
-   * Some FRAM chips do not have a continuation code (0x7f) in their second byte of the RDID command.
-   * For those, the Manufacturer ID and Product ID are found inside the first three bytes, see p.11 of
-   * https://www.lapis-tech.com/en/data/datasheet-file_db/Memory/FEDR45V064B-01.pdf
-   */
-  if (a[1]==0x7f) {
+  if (a[1] == 0x7f) {
+    // Device with continuation code (0x7F) in their second byte
+    // Manu ( 1 byte)  - 0x7F - Product (2 bytes)
     *manufacturerID = (a[0]);
     *productID = (a[2] << 8) + a[3];
   } else {
+    // Device without continuation code
+    // Manu ( 1 byte)  - Product (2 bytes)
     *manufacturerID = (a[0]);
     *productID = (a[1] << 8) + a[2];
   }
