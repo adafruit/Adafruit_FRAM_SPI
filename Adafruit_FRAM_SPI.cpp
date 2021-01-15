@@ -34,8 +34,8 @@
 
 /// Supported flash devices
 const struct {
-  uint8_t manufID; //< Manufacture ID
-  uint16_t prodID; //< Product ID
+  uint8_t manufID; ///< Manufacture ID
+  uint16_t prodID; ///< Product ID
 } _supported_devices[] = {
     // Sorted in numerical order
     // Fujitsu
