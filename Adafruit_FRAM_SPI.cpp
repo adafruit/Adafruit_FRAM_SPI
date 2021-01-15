@@ -32,9 +32,10 @@
 
 #include "Adafruit_FRAM_SPI.h"
 
+/// Supported flash devices
 const struct {
-  uint8_t manufID; // Manufacture ID
-  uint16_t prodID; // Product ID
+  uint8_t manufID; //< Manufacture ID
+  uint16_t prodID; //< Product ID
 } _supported_devices[] = {
     // Sorted in numerical order
     // Fujitsu
@@ -45,7 +46,7 @@ const struct {
     {0x04, 0x4903}, // MB85RS4MT
 
     // Cypress
-    {0x7F, 0x7F7f}, // FM25V02
+    {0x7F, 0x7F7f}, // FM25V02 (manu = 7F7F7F7F7F7FC2, device = 0x2200)
 
     // Lapis
     {0xAE, 0x8305} // MR45V064B
