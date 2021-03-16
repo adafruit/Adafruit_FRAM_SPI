@@ -58,8 +58,6 @@ public:
 
 private:
   Adafruit_SPIDevice *spi_dev = NULL;
-
-  boolean _framInitialised;
   uint8_t _nAddressSizeBytes;
 };
 
