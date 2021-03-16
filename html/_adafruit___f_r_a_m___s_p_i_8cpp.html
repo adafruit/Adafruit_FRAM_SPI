@@ -79,6 +79,10 @@ Variables</h2></td></tr>
 &#160;&#160;&#160;uint16_t&#160;&#160;&#160;<a class="el" href="_adafruit___f_r_a_m___s_p_i_8cpp.html#a82207e4449fe21bc27e6992911ff791d">prodID</a></td></tr>
 <tr class="memdesc:af1615c6d88520911f13e1606d8ea7e17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Product ID. <br /></td></tr>
 <tr class="separator:af1615c6d88520911f13e1606d8ea7e17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab05f70a5dd6c42642110bcbae9c1484d"><td class="memItemLeft" >
+&#160;&#160;&#160;uint32_t&#160;&#160;&#160;<a class="el" href="_adafruit___f_r_a_m___s_p_i_8cpp.html#ab2c6b258f02add8fdf4cfc7c371dd772">size</a></td></tr>
+<tr class="memdesc:ab05f70a5dd6c42642110bcbae9c1484d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size in bytes. <br /></td></tr>
+<tr class="separator:ab05f70a5dd6c42642110bcbae9c1484d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf5b081e810bfeea8b70c14d6f37633f"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___f_r_a_m___s_p_i_8cpp.html#abf5b081e810bfeea8b70c14d6f37633f">_supported_devices</a> []</td></tr>
 <tr class="memdesc:abf5b081e810bfeea8b70c14d6f37633f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supported flash devices.  <a href="#abf5b081e810bfeea8b70c14d6f37633f">More...</a><br /></td></tr>
 <tr class="separator:abf5b081e810bfeea8b70c14d6f37633f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -95,7 +99,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    </div><div class="line">    </div><div class="line">    {0x04, 0x0101}, </div><div class="line">    {0x04, 0x0302}, </div><div class="line">    {0x04, 0x2303}, </div><div class="line">    {0x04, 0x4803}, </div><div class="line">    {0x04, 0x4903}, </div><div class="line"></div><div class="line">    </div><div class="line">    {0x7F, 0x7F7f}, </div><div class="line"></div><div class="line">    </div><div class="line">    {0xAE, 0x8305} </div><div class="line">}</div></div><!-- fragment -->
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    </div><div class="line">    </div><div class="line">    {0x04, 0x0101, 2 * 1024},   </div><div class="line">    {0x04, 0x0302, 8 * 1024},   </div><div class="line">    {0x04, 0x2303, 8 * 1024},   </div><div class="line">    {0x04, 0x4803, 256 * 1024}, </div><div class="line">    {0x04, 0x4903, 512 * 1024}, </div><div class="line"></div><div class="line">    </div><div class="line">    {0x7F, 0x7F7f, 32 * 1024}, </div><div class="line">                               </div><div class="line"></div><div class="line">    </div><div class="line">    {0xAE, 0x8305, 8 * 1024} </div><div class="line">}</div></div><!-- fragment -->
 <p>Supported flash devices. </p>
 
 </div>
