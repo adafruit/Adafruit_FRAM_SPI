@@ -36,20 +36,22 @@
 const struct {
   uint8_t manufID; ///< Manufacture ID
   uint16_t prodID; ///< Product ID
+  uint32_t size;   ///< Size in bytes
 } _supported_devices[] = {
     // Sorted in numerical order
     // Fujitsu
-    {0x04, 0x0101}, // MB85RS16
-    {0x04, 0x0302}, // MB85RS64V
-    {0x04, 0x2303}, // MB85RS64T
-    {0x04, 0x4803}, // MB85RS2MTA
-    {0x04, 0x4903}, // MB85RS4MT
+    {0x04, 0x0101, 2 * 1024},   // MB85RS16
+    {0x04, 0x0302, 8 * 1024},   // MB85RS64V
+    {0x04, 0x2303, 8 * 1024},   // MB85RS64T
+    {0x04, 0x4803, 256 * 1024}, // MB85RS2MTA
+    {0x04, 0x4903, 512 * 1024}, // MB85RS4MT
 
     // Cypress
-    {0x7F, 0x7F7f}, // FM25V02 (manu = 7F7F7F7F7F7FC2, device = 0x2200)
+    {0x7F, 0x7F7f, 32 * 1024}, // FM25V02
+                               // (manu = 7F7F7F7F7F7FC2, device = 0x2200)
 
     // Lapis
-    {0xAE, 0x8305} // MR45V064B
+    {0xAE, 0x8305, 8 * 1024} // MR45V064B
 };
 
 /*!
@@ -58,14 +60,14 @@ const struct {
  *          ManufactureID to be checked
  *  @param  prodID
  *          ProductID to be checked
- *  @return true if supported
+ *  @return size of device, 0 if not supported
  */
-static bool check_supported_device(uint8_t manufID, uint16_t prodID) {
+static uint32_t check_supported_device(uint8_t manufID, uint16_t prodID) {
   for (uint8_t i = 0;
        i < sizeof(_supported_devices) / sizeof(_supported_devices[0]); i++) {
     if (manufID == _supported_devices[i].manufID &&
         prodID == _supported_devices[i].prodID)
-      return true;
+      return _supported_devices[i].size;
   }
 
   Serial.print(F("Unexpected Device: Manufacturer ID = 0x"));
@@ -73,7 +75,7 @@ static bool check_supported_device(uint8_t manufID, uint16_t prodID) {
   Serial.print(F(", Product ID = 0x"));
   Serial.println(prodID, HEX);
 
-  return false;
+  return 0;
 }
 
 /*!
@@ -90,7 +92,6 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
 
   spi_dev = new Adafruit_SPIDevice(cs, 1000000, SPI_BITORDER_MSBFIRST,
                                    SPI_MODE0, theSPI);
-  _framInitialised = false;
 }
 
 /*!
@@ -112,7 +113,6 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi,
 
   spi_dev = new Adafruit_SPIDevice(cs, clk, miso, mosi, 1000000,
                                    SPI_BITORDER_MSBFIRST, SPI_MODE0);
-  _framInitialised = false;
 }
 
 /*!
@@ -123,7 +123,8 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi,
  *  @return true if successful
  */
 bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
-  setAddressSize(nAddressSizeBytes);
+  (void)
+      nAddressSizeBytes; // not used anymore, since we will use auto-detect size
 
   /* Configure SPI */
   if (!spi_dev->begin()) {
@@ -136,9 +137,19 @@ bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   getDeviceID(&manufID, &prodID);
 
   /* Everything seems to be properly initialised and connected */
-  _framInitialised = check_supported_device(manufID, prodID);
+  uint32_t flash_size = check_supported_device(manufID, prodID);
 
-  return _framInitialised;
+  Serial.print(F("Flash Size = 0x"));
+  Serial.println(flash_size, HEX);
+
+  // Detect address size in bytes either 2 or 3 bytes (4 bytes is not supported)
+  if (flash_size > 64UL * 1024) {
+    setAddressSize(3);
+  } else {
+    setAddressSize(2);
+  }
+
+  return flash_size != 0;
 }
 
 /*!
