@@ -104,7 +104,7 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
  *  @param  *theSPI
  *          SPI interface object, defaults to &SPI
  */
-Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, uint32_t        freq,
+Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, uint32_t freq,
                                      SPIClass *theSPI) {
   if (spi_dev) {
     delete spi_dev;
