@@ -85,14 +85,17 @@ static uint32_t check_supported_device(uint8_t manufID, uint16_t prodID) {
  *          Required chip select pin number
  *  @param  *theSPI
  *          SPI interface object, defaults to &SPI
+ *  @param  freq
+ *          The SPI clock frequency to use, defaults to 1MHz
  */
-Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
+Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI,
+                                     uint32_t freq) {
   if (spi_dev) {
     delete spi_dev;
   }
 
-  spi_dev = new Adafruit_SPIDevice(cs, 1000000, SPI_BITORDER_MSBFIRST,
-                                   SPI_MODE0, theSPI);
+  spi_dev = new Adafruit_SPIDevice(cs, freq, SPI_BITORDER_MSBFIRST, SPI_MODE0,
+                                   theSPI);
 }
 
 /*!

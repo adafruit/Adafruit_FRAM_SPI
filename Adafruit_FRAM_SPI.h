@@ -42,7 +42,8 @@ typedef enum opcodes_e {
  */
 class Adafruit_FRAM_SPI {
 public:
-  Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI = &SPI);
+  Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI = &SPI,
+                    uint32_t freq = 1000000);
   Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi, int8_t cs);
 
   bool begin(uint8_t nAddressSizeBytes = 2);
