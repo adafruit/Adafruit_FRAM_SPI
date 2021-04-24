@@ -73,9 +73,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a271b1a3b7fda435661049a01873b13ce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___f_r_a_m___s_p_i.html#a271b1a3b7fda435661049a01873b13ce">Adafruit_FRAM_SPI</a> (int8_t cs, SPIClass *theSPI=&amp;SPI)</td></tr>
-<tr class="memdesc:a271b1a3b7fda435661049a01873b13ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiates a new SPI FRAM class using hardware SPI.  <a href="#a271b1a3b7fda435661049a01873b13ce">More...</a><br /></td></tr>
-<tr class="separator:a271b1a3b7fda435661049a01873b13ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f5c7fa36adeda7574873ee353dd49a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___f_r_a_m___s_p_i.html#a6f5c7fa36adeda7574873ee353dd49a2">Adafruit_FRAM_SPI</a> (int8_t cs, SPIClass *theSPI=&amp;SPI, uint32_t freq=1000000)</td></tr>
+<tr class="memdesc:a6f5c7fa36adeda7574873ee353dd49a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiates a new SPI FRAM class using hardware SPI.  <a href="#a6f5c7fa36adeda7574873ee353dd49a2">More...</a><br /></td></tr>
+<tr class="separator:a6f5c7fa36adeda7574873ee353dd49a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac296d3084f661bdd4d5353f0f2cb8589"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___f_r_a_m___s_p_i.html#ac296d3084f661bdd4d5353f0f2cb8589">Adafruit_FRAM_SPI</a> (int8_t clk, int8_t miso, int8_t mosi, int8_t cs)</td></tr>
 <tr class="memdesc:ac296d3084f661bdd4d5353f0f2cb8589"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiates a new SPI FRAM class using bitbang SPI.  <a href="#ac296d3084f661bdd4d5353f0f2cb8589">More...</a><br /></td></tr>
 <tr class="separator:ac296d3084f661bdd4d5353f0f2cb8589"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,8 +113,8 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that stores state and functions for interacting with FRAM SPI. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a271b1a3b7fda435661049a01873b13ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a271b1a3b7fda435661049a01873b13ce">&#9670;&nbsp;</a></span>Adafruit_FRAM_SPI() <span class="overload">[1/2]</span></h2>
+<a id="a6f5c7fa36adeda7574873ee353dd49a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f5c7fa36adeda7574873ee353dd49a2">&#9670;&nbsp;</a></span>Adafruit_FRAM_SPI() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -129,7 +129,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">SPIClass *&#160;</td>
-          <td class="paramname"><em>theSPI</em> = <code>&amp;SPI</code>&#160;</td>
+          <td class="paramname"><em>theSPI</em> = <code>&amp;SPI</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>freq</em> = <code>1000000</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -144,6 +150,7 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">cs</td><td>Required chip select pin number </td></tr>
     <tr><td class="paramname">*theSPI</td><td>SPI interface object, defaults to &amp;SPI </td></tr>
+    <tr><td class="paramname">freq</td><td>The SPI clock frequency to use, defaults to 1MHz </td></tr>
   </table>
   </dd>
 </dl>
