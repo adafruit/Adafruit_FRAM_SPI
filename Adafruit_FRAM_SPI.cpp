@@ -40,19 +40,19 @@ const struct {
 } _supported_devices[] = {
     // Sorted in numerical order
     // Fujitsu
-    {0x04, 0x0101, 2 * 1024},   // MB85RS16
-    {0x04, 0x0302, 8 * 1024},   // MB85RS64V
-    {0x04, 0x2303, 8 * 1024},   // MB85RS64T
-    {0x04, 0x2503, 32UL * 1024},  // MB85RS256TY
-    {0x04, 0x4803, 256UL * 1024}, // MB85RS2MTA
-    {0x04, 0x4903, 512UL * 1024}, // MB85RS4MT
+    {0x04, 0x0101, 2 * 1024UL},   // MB85RS16
+    {0x04, 0x0302, 8 * 1024UL},   // MB85RS64V
+    {0x04, 0x2303, 8 * 1024UL},   // MB85RS64T
+    {0x04, 0x2503, 32 * 1024UL},  // MB85RS256TY
+    {0x04, 0x4803, 256 * 1024UL}, // MB85RS2MTA
+    {0x04, 0x4903, 512 * 1024UL}, // MB85RS4MT
 
     // Cypress
-    {0x7F, 0x7F7f, 32UL * 1024}, // FM25V02
+    {0x7F, 0x7F7f, 32 * 1024UL}, // FM25V02
                                // (manu = 7F7F7F7F7F7FC2, device = 0x2200)
 
     // Lapis
-    {0xAE, 0x8305, 8 * 1024} // MR45V064B
+    {0xAE, 0x8305, 8 * 1024UL} // MR45V064B
 };
 
 /*!
