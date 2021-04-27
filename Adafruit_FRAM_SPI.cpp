@@ -49,7 +49,7 @@ const struct {
 
     // Cypress
     {0x7F, 0x7F7f, 32 * 1024UL}, // FM25V02
-                               // (manu = 7F7F7F7F7F7FC2, device = 0x2200)
+                                 // (manu = 7F7F7F7F7F7FC2, device = 0x2200)
 
     // Lapis
     {0xAE, 0x8305, 8 * 1024UL} // MR45V064B
