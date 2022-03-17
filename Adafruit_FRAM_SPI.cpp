@@ -204,7 +204,8 @@ void Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
  *   @param count
  *           The number of bytes to write
  */
-void Adafruit_FRAM_SPI::write(uint32_t addr, uint8_t *values, size_t count) {
+void Adafruit_FRAM_SPI::write(uint32_t addr, const uint8_t *values,
+                              size_t count) {
   uint8_t prebuf[10];
   uint8_t i = 0;
 
