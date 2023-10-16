@@ -44,6 +44,7 @@ const struct {
     {0x04, 0x0302, 8 * 1024UL},   // MB85RS64V
     {0x04, 0x2303, 8 * 1024UL},   // MB85RS64T
     {0x04, 0x2503, 32 * 1024UL},  // MB85RS256TY
+    {0x04, 0x2703, 128 * 1024UL}, // MB85RS1MT
     {0x04, 0x4803, 256 * 1024UL}, // MB85RS2MTA
     {0x04, 0x4903, 512 * 1024UL}, // MB85RS4MT
 
@@ -141,19 +142,19 @@ bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   getDeviceID(&manufID, &prodID);
 
   /* Everything seems to be properly initialised and connected */
-  uint32_t flash_size = check_supported_device(manufID, prodID);
+  uint32_t fram_size = check_supported_device(manufID, prodID);
 
-  Serial.print(F("Flash Size = 0x"));
-  Serial.println(flash_size, HEX);
+  Serial.print(F("FRAM Size = 0x"));
+  Serial.println(fram_size, HEX);
 
   // Detect address size in bytes either 2 or 3 bytes (4 bytes is not supported)
-  if (flash_size > 64UL * 1024) {
+  if (fram_size > 64UL * 1024) {
     setAddressSize(3);
   } else {
     setAddressSize(2);
   }
 
-  return flash_size != 0;
+  return fram_size != 0;
 }
 
 /*!
