@@ -47,14 +47,14 @@ public:
   Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi, int8_t cs);
 
   bool begin(uint8_t nAddressSizeBytes = 2);
-  void writeEnable(bool enable);
-  void write8(uint32_t addr, uint8_t value);
-  void write(uint32_t addr, const uint8_t *values, size_t count);
+  bool writeEnable(bool enable);
+  bool write8(uint32_t addr, uint8_t value);
+  bool write(uint32_t addr, const uint8_t *values, size_t count);
   uint8_t read8(uint32_t addr);
-  void read(uint32_t addr, uint8_t *values, size_t count);
-  void getDeviceID(uint8_t *manufacturerID, uint16_t *productID);
+  bool read(uint32_t addr, uint8_t *values, size_t count);
+  bool getDeviceID(uint8_t *manufacturerID, uint16_t *productID);
   uint8_t getStatusRegister(void);
-  void setStatusRegister(uint8_t value);
+  bool setStatusRegister(uint8_t value);
   void setAddressSize(uint8_t nAddressSize);
 
 private:

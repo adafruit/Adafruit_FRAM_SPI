@@ -162,7 +162,7 @@ bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
     @param enable
             True enables writes, false disables writes
 */
-void Adafruit_FRAM_SPI::writeEnable(bool enable) {
+bool Adafruit_FRAM_SPI::writeEnable(bool enable) {
   uint8_t cmd;
 
   if (enable) {
@@ -170,7 +170,7 @@ void Adafruit_FRAM_SPI::writeEnable(bool enable) {
   } else {
     cmd = OPCODE_WRDI;
   }
-  spi_dev->write(&cmd, 1);
+  return spi_dev->write(&cmd, 1);
 }
 
 /*!
@@ -180,7 +180,7 @@ void Adafruit_FRAM_SPI::writeEnable(bool enable) {
  *  @param value
  *         The 8-bit value to write at framAddr
  */
-void Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
+bool Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
   uint8_t buffer[10];
   uint8_t i = 0;
 
@@ -193,7 +193,7 @@ void Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
   buffer[i++] = (uint8_t)(addr & 0xFF);
   buffer[i++] = value;
 
-  spi_dev->write(buffer, i);
+  return spi_dev->write(buffer, i);
 }
 
 /*!
@@ -205,7 +205,7 @@ void Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
  *   @param count
  *           The number of bytes to write
  */
-void Adafruit_FRAM_SPI::write(uint32_t addr, const uint8_t *values,
+bool Adafruit_FRAM_SPI::write(uint32_t addr, const uint8_t *values,
                               size_t count) {
   uint8_t prebuf[10];
   uint8_t i = 0;
@@ -218,7 +218,7 @@ void Adafruit_FRAM_SPI::write(uint32_t addr, const uint8_t *values,
   prebuf[i++] = (uint8_t)(addr >> 8);
   prebuf[i++] = (uint8_t)(addr & 0xFF);
 
-  spi_dev->write(values, count, prebuf, i);
+  return spi_dev->write(values, count, prebuf, i);
 }
 
 /*!
@@ -253,7 +253,7 @@ uint8_t Adafruit_FRAM_SPI::read8(uint32_t addr) {
  *   @param  count
  *           The number of bytes to read
  */
-void Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
+bool Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
   uint8_t buffer[10];
   uint8_t i = 0;
 
@@ -265,7 +265,7 @@ void Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
   buffer[i++] = (uint8_t)(addr >> 8);
   buffer[i++] = (uint8_t)(addr & 0xFF);
 
-  spi_dev->write_then_read(buffer, i, values, count);
+  return spi_dev->write_then_read(buffer, i, values, count);
 }
 
 /*!
@@ -277,12 +277,14 @@ void Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
  *          Product ID fields (bytes 7..0). Should be 0x0302 for
  *          the MB85RS64VPNF-G-JNERE1.
  */
-void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
+bool Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
                                     uint16_t *productID) {
   uint8_t cmd = OPCODE_RDID;
   uint8_t a[4] = {0, 0, 0, 0};
 
-  spi_dev->write_then_read(&cmd, 1, a, 4);
+  if( !spi_dev->write_then_read(&cmd, 1, a, 4) ) {
+    return false;
+  }
 
   if (a[1] == 0x7f) {
     // Device with continuation code (0x7F) in their second byte
@@ -295,6 +297,8 @@ void Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
     *manufacturerID = (a[0]);
     *productID = (a[1] << 8) + a[2];
   }
+
+  return true;
 }
 
 /*!
@@ -316,13 +320,13 @@ uint8_t Adafruit_FRAM_SPI::getStatusRegister() {
  *   @param  value
  *           value that will be set
  */
-void Adafruit_FRAM_SPI::setStatusRegister(uint8_t value) {
+bool Adafruit_FRAM_SPI::setStatusRegister(uint8_t value) {
   uint8_t cmd[2];
 
   cmd[0] = OPCODE_WRSR;
   cmd[1] = value;
 
-  spi_dev->write(cmd, 2);
+  return spi_dev->write(cmd, 2);
 }
 
 /*!
