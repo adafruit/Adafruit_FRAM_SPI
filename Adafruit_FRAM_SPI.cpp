@@ -282,7 +282,7 @@ bool Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
   uint8_t cmd = OPCODE_RDID;
   uint8_t a[4] = {0, 0, 0, 0};
 
-  if(!spi_dev->write_then_read(&cmd, 1, a, 4)) {
+  if (!spi_dev->write_then_read(&cmd, 1, a, 4)) {
     return false;
   }
 
