@@ -158,10 +158,11 @@ bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
 }
 
 /*!
-    @brief  Enables or disables writing to the SPI flash
-    @param enable
-            True enables writes, false disables writes
-*/
+ *  @brief  Enables or disables writing to the SPI flash
+ *  @param enable
+ *          True enables writes, false disables writes
+ *  @return true if successful
+ */
 bool Adafruit_FRAM_SPI::writeEnable(bool enable) {
   uint8_t cmd;
 
@@ -179,6 +180,7 @@ bool Adafruit_FRAM_SPI::writeEnable(bool enable) {
  *         The 32-bit address to write to in FRAM memory
  *  @param value
  *         The 8-bit value to write at framAddr
+ *  @return true if successful
  */
 bool Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
   uint8_t buffer[10];
@@ -204,6 +206,7 @@ bool Adafruit_FRAM_SPI::write8(uint32_t addr, uint8_t value) {
  *           The pointer to an array of 8-bit values to write starting at addr
  *   @param count
  *           The number of bytes to write
+ *   @return true if successful
  */
 bool Adafruit_FRAM_SPI::write(uint32_t addr, const uint8_t *values,
                               size_t count) {
@@ -252,6 +255,7 @@ uint8_t Adafruit_FRAM_SPI::read8(uint32_t addr) {
  *           The pointer to an array of 8-bit values to read starting at addr
  *   @param  count
  *           The number of bytes to read
+ *   @return true if successful
  */
 bool Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
   uint8_t buffer[10];
@@ -276,6 +280,7 @@ bool Adafruit_FRAM_SPI::read(uint32_t addr, uint8_t *values, size_t count) {
  *          The memory density (bytes 15..8) and proprietary
  *          Product ID fields (bytes 7..0). Should be 0x0302 for
  *          the MB85RS64VPNF-G-JNERE1.
+ *   @return true if successful
  */
 bool Adafruit_FRAM_SPI::getDeviceID(uint8_t *manufacturerID,
                                     uint16_t *productID) {
@@ -319,6 +324,7 @@ uint8_t Adafruit_FRAM_SPI::getStatusRegister() {
  *   @brief  Sets the status register
  *   @param  value
  *           value that will be set
+ *   @return true if successful
  */
 bool Adafruit_FRAM_SPI::setStatusRegister(uint8_t value) {
   uint8_t cmd[2];
