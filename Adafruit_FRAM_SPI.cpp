@@ -46,6 +46,7 @@ const struct {
     {0x04, 0x2503, 32 * 1024UL},  // MB85RS256TY
     {0x04, 0x2703, 128 * 1024UL}, // MB85RS1MT
     {0x04, 0x4803, 256 * 1024UL}, // MB85RS2MTA
+    {0x04, 0x2803, 256 * 1024UL}, // MB85RS2MT
     {0x04, 0x4903, 512 * 1024UL}, // MB85RS4MT
 
     // Cypress
@@ -343,3 +344,39 @@ bool Adafruit_FRAM_SPI::setStatusRegister(uint8_t value) {
 void Adafruit_FRAM_SPI::setAddressSize(uint8_t nAddressSize) {
   _nAddressSizeBytes = nAddressSize;
 }
+
+/*!
+ *  @brief  Enters the FRAM's low power sleep mode
+ *  @return true if successful
+ */
+// WARNING: this method has not yet been validated
+bool Adafruit_FRAM_SPI::enter_low_power_mode(void) {
+  uint8_t cmd;
+
+  cmd = OPCODE_SLEEP;
+
+  return spi_dev->write(&cmd, 1);
+}
+
+
+/*!
+ *  @brief  exits the FRAM's low power sleep mode
+ *  @return true if successful
+ */
+// WARNING: this method has not yet been validated
+bool Adafruit_FRAM_SPI::exit_low_power_mode(void) {
+  uint8_t cmd;
+
+  // Returning to an normal operation from the SLEEP mode is carried out after tREC (Max 400 μs)
+  // time from the falling edge of CS
+  spi_dev->beginTransactionWithAssertingCS();
+  delayMicroseconds(300);
+  // It is possible to return CS to H level before tREC time. However, it
+  // is prohibited to bring down CS to L level again during tREC period.
+  spi_dev->endTransactionWithDeassertingCS();
+  delayMicroseconds(100);
+
+  return spi_dev->write(&cmd, 1);
+}
+
+
