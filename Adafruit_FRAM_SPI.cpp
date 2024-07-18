@@ -154,21 +154,21 @@ bool Adafruit_FRAM_SPI::begin(uint8_t nAddressSizeBytes) {
   _dev_idx = get_supported_idx(manufID, prodID);
 
   if (_dev_idx == -1) {
-    #if FRAM_DEBUG
+#if FRAM_DEBUG
     Serial.print(F("Unexpected Device: Manufacturer ID = 0x"));
     Serial.print(manufID, HEX);
     Serial.print(F(", Product ID = 0x"));
     Serial.println(prodID, HEX);
-    #endif
+#endif
 
     return false;
   } else {
     uint32_t const fram_size = _supported_devices[_dev_idx].size;
 
-    #if FRAM_DEBUG
+#if FRAM_DEBUG
     Serial.print(F("FRAM Size = 0x"));
     Serial.println(fram_size, HEX);
-    #endif
+#endif
 
     // Detect address size in bytes either 2 or 3 bytes (4 bytes is not
     // supported)
