@@ -34,6 +34,7 @@
 
 #include "Adafruit_FRAM_SPI.h"
 
+/// Enable debug output
 #define FRAM_DEBUG 0
 
 /// Supported flash devices
