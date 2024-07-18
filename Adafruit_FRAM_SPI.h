@@ -28,14 +28,14 @@
 
 /** Operation Codes **/
 typedef enum opcodes_e {
-  OPCODE_WREN  = 0b0110,     /* Write Enable Latch */
-  OPCODE_WRDI  = 0b0100,     /* Reset Write Enable Latch */
-  OPCODE_RDSR  = 0b0101,     /* Read Status Register */
-  OPCODE_WRSR  = 0b0001,     /* Write Status Register */
-  OPCODE_READ  = 0b0011,     /* Read Memory */
-  OPCODE_WRITE = 0b0010,     /* Write Memory */
-  OPCODE_RDID  = 0b10011111, /* Read Device ID */
-  OPCODE_SLEEP = 0b10111001  /* Sleep Mode  */ // added by FUEL4EP
+  OPCODE_WREN = 0b0110,     /* Write Enable Latch */
+  OPCODE_WRDI = 0b0100,     /* Reset Write Enable Latch */
+  OPCODE_RDSR = 0b0101,     /* Read Status Register */
+  OPCODE_WRSR = 0b0001,     /* Write Status Register */
+  OPCODE_READ = 0b0011,     /* Read Memory */
+  OPCODE_WRITE = 0b0010,    /* Write Memory */
+  OPCODE_RDID = 0b10011111, /* Read Device ID */
+  OPCODE_SLEEP = 0b10111001 /* Sleep Mode by FUEL4EP */
 } opcodes_t;
 
 /*!

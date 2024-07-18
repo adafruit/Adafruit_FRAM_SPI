@@ -3,15 +3,20 @@ name: Arduino Library CI
 on: [pull_request, push, repository_dispatch]
 
 jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
+
   build:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-    - uses: actions/checkout@v3
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
          repository: adafruit/ci-arduino
          path: ci
@@ -21,9 +26,6 @@ jobs:
 
     - name: test platforms
       run: python3 ci/build_platform.py main_platforms
-
-    - name: clang
-      run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" -r . 
 
     - name: doxygen
       env:

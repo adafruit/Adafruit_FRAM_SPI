@@ -358,7 +358,6 @@ bool Adafruit_FRAM_SPI::enter_low_power_mode(void) {
   return spi_dev->write(&cmd, 1);
 }
 
-
 /*!
  *  @brief  exits the FRAM's low power sleep mode
  *  @return true if successful
@@ -367,8 +366,8 @@ bool Adafruit_FRAM_SPI::enter_low_power_mode(void) {
 bool Adafruit_FRAM_SPI::exit_low_power_mode(void) {
   uint8_t cmd;
 
-  // Returning to an normal operation from the SLEEP mode is carried out after tREC (Max 400 μs)
-  // time from the falling edge of CS
+  // Returning to an normal operation from the SLEEP mode is carried out after
+  // tREC (Max 400 μs) time from the falling edge of CS
   spi_dev->beginTransactionWithAssertingCS();
   delayMicroseconds(300);
   // It is possible to return CS to H level before tREC time. However, it
@@ -378,5 +377,3 @@ bool Adafruit_FRAM_SPI::exit_low_power_mode(void) {
 
   return spi_dev->write(&cmd, 1);
 }
-
-
