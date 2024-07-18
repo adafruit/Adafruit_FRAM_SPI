@@ -35,7 +35,7 @@ typedef enum opcodes_e {
   OPCODE_READ = 0b0011,     /* Read Memory */
   OPCODE_WRITE = 0b0010,    /* Write Memory */
   OPCODE_RDID = 0b10011111, /* Read Device ID */
-  OPCODE_SLEEP = 0b10111001 /* Sleep Mode by FUEL4EP */
+  OPCODE_SLEEP = 0b10111001 /* Sleep Mode */
 } opcodes_t;
 
 /*!
@@ -47,6 +47,7 @@ public:
   Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI = &SPI,
                     uint32_t freq = 1000000);
   Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi, int8_t cs);
+  virtual ~Adafruit_FRAM_SPI(void);
 
   bool begin(uint8_t nAddressSizeBytes = 2);
   bool writeEnable(bool enable);
@@ -58,12 +59,14 @@ public:
   uint8_t getStatusRegister(void);
   bool setStatusRegister(uint8_t value);
   void setAddressSize(uint8_t nAddressSize);
-  bool enter_low_power_mode(void); // added by FUEL4EP
-  bool exit_low_power_mode(void);  // added by FUEL4EP
+  bool enterSleep(void);
+  bool exitSleep(void);
 
 private:
-  Adafruit_SPIDevice *spi_dev = NULL;
+  void init(void);
+  Adafruit_SPIDevice *spi_dev;
   uint8_t _nAddressSizeBytes;
+  int _dev_idx;
 };
 
 #endif

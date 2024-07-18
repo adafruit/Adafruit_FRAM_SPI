@@ -3,19 +3,14 @@ name: Arduino Library CI
 on: [pull_request, push, repository_dispatch]
 
 jobs:
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run pre-commit
-        uses: pre-commit/action@v3.0.1
-
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+    - name: Run pre-commit
+      uses: pre-commit/action@v3.0.1
+
     - uses: actions/checkout@v4
       with:
          repository: adafruit/ci-arduino
