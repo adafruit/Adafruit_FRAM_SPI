@@ -64,8 +64,7 @@ $(function() {
 <div class="title">Adafruit_FRAM_SPI.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="_adafruit___f_r_a_m___s_p_i_8h_source.html">Adafruit_FRAM_SPI.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -83,6 +82,10 @@ Variables</h2></td></tr>
 &#160;&#160;&#160;uint32_t&#160;&#160;&#160;<a class="el" href="_adafruit___f_r_a_m___s_p_i_8cpp.html#ab2c6b258f02add8fdf4cfc7c371dd772">size</a></td></tr>
 <tr class="memdesc:ab05f70a5dd6c42642110bcbae9c1484d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size in bytes. <br /></td></tr>
 <tr class="separator:ab05f70a5dd6c42642110bcbae9c1484d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cb7bd1dca8e398c586133e003d51257"><td class="memItemLeft" >
+&#160;&#160;&#160;bool&#160;&#160;&#160;<a class="el" href="_adafruit___f_r_a_m___s_p_i_8cpp.html#ad31bcdf760b426c572cb0fb5a9929201">support_sleep</a></td></tr>
+<tr class="memdesc:a6cb7bd1dca8e398c586133e003d51257"><td class="mdescLeft">&#160;</td><td class="mdescRight">Support sleep mode. <br /></td></tr>
+<tr class="separator:a6cb7bd1dca8e398c586133e003d51257"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf5b081e810bfeea8b70c14d6f37633f"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___f_r_a_m___s_p_i_8cpp.html#abf5b081e810bfeea8b70c14d6f37633f">_supported_devices</a> []</td></tr>
 <tr class="memdesc:abf5b081e810bfeea8b70c14d6f37633f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supported flash devices.  <a href="#abf5b081e810bfeea8b70c14d6f37633f">More...</a><br /></td></tr>
 <tr class="separator:abf5b081e810bfeea8b70c14d6f37633f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -99,7 +102,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    </div><div class="line">    </div><div class="line">    {0x04, 0x0101, 2 * 1024UL},   </div><div class="line">    {0x04, 0x0302, 8 * 1024UL},   </div><div class="line">    {0x04, 0x2303, 8 * 1024UL},   </div><div class="line">    {0x04, 0x2503, 32 * 1024UL},  </div><div class="line">    {0x04, 0x2703, 128 * 1024UL}, </div><div class="line">    {0x04, 0x4803, 256 * 1024UL}, </div><div class="line">    {0x04, 0x4903, 512 * 1024UL}, </div><div class="line"></div><div class="line">    </div><div class="line">    {0x7F, 0x7F7f, 32 * 1024UL}, </div><div class="line">                                 </div><div class="line"></div><div class="line">    </div><div class="line">    {0xAE, 0x8305, 8 * 1024UL} </div><div class="line">}</div></div><!-- fragment -->
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    </div><div class="line">    </div><div class="line">    {0x04, 0x0101, 2 * 1024UL, <span class="keyword">false</span>},  </div><div class="line">    {0x04, 0x0302, 8 * 1024UL, <span class="keyword">false</span>},  </div><div class="line">    {0x04, 0x2303, 8 * 1024UL, <span class="keyword">true</span>},   </div><div class="line">    {0x04, 0x2503, 32 * 1024UL, <span class="keyword">true</span>},  </div><div class="line">    {0x04, 0x2703, 128 * 1024UL, <span class="keyword">true</span>}, </div><div class="line">    {0x04, 0x4803, 256 * 1024UL, <span class="keyword">true</span>}, </div><div class="line">    {0x04, 0x2803, 256 * 1024UL, <span class="keyword">true</span>}, </div><div class="line">    {0x04, 0x4903, 512 * 1024UL, <span class="keyword">true</span>}, </div><div class="line"></div><div class="line">    </div><div class="line">    {0x7F, 0x7F7f, 32 * 1024UL, <span class="keyword">false</span>}, </div><div class="line">    </div><div class="line"></div><div class="line">    </div><div class="line">    {0xAE, 0x8305, 8 * 1024UL, <span class="keyword">false</span>} </div><div class="line">}</div></div><!-- fragment -->
 <p>Supported flash devices. </p>
 
 </div>
