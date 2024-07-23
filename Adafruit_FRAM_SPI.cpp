@@ -72,7 +72,7 @@ const struct {
  *  @return device index, -1 if not supported
  */
 static int get_supported_idx(uint8_t manufID, uint16_t prodID) {
-  for (int i = 0;
+  for (unsigned int i = 0;
        i < sizeof(_supported_devices) / sizeof(_supported_devices[0]); i++) {
     if (manufID == _supported_devices[i].manufID &&
         prodID == _supported_devices[i].prodID)
