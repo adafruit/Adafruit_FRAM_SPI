@@ -54,6 +54,7 @@ const struct {
     {0x04, 0x4803, 256 * 1024UL, true}, // MB85RS2MTA
     {0x04, 0x2803, 256 * 1024UL, true}, // MB85RS2MT
     {0x04, 0x4903, 512 * 1024UL, true}, // MB85RS4MT
+    {0x04, 0x490B, 512 * 1024UL, true}, // MB85RS4MTY
 
     // Cypress
     {0x7F, 0x7F7f, 32 * 1024UL, false}, // FM25V02
@@ -409,6 +410,11 @@ bool Adafruit_FRAM_SPI::exitSleep(void) {
   // is prohibited to bring down CS to L level again during tREC period.
   spi_dev->endTransactionWithDeassertingCS();
   delayMicroseconds(100);
+
+  // MB85RS4MTY requires 450us (extra 50us) to wake from "Hibernate"
+  if(_supported_devices[_dev_idx].manufID == 0x04 && _supported_devices[_dev_idx].prodID == 0x0B) {
+    delayMicroseconds(50);
+  }
 
   return true;
 }
