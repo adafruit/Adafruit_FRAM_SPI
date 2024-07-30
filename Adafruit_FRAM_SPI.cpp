@@ -412,7 +412,8 @@ bool Adafruit_FRAM_SPI::exitSleep(void) {
   delayMicroseconds(100);
 
   // MB85RS4MTY requires 450us (extra 50us) to wake from "Hibernate"
-  if(_supported_devices[_dev_idx].manufID == 0x04 && _supported_devices[_dev_idx].prodID == 0x0B) {
+  if (_supported_devices[_dev_idx].manufID == 0x04 &&
+      _supported_devices[_dev_idx].prodID == 0x0B) {
     delayMicroseconds(50);
   }
 
