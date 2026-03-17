@@ -55,6 +55,7 @@ const struct {
     {0x04, 0x2803, 256 * 1024UL, true}, // MB85RS2MT
     {0x04, 0x4903, 512 * 1024UL, true}, // MB85RS4MT
     {0x04, 0x490B, 512 * 1024UL, true}, // MB85RS4MTY
+    {0x04, 0x2302, 8 * 1024UL, true}, //MB85RS64VYPNF
 
     // Cypress
     {0x7F, 0x7F7f, 32 * 1024UL, false}, // FM25V02
