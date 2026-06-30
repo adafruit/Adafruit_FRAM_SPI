@@ -48,6 +48,7 @@ const struct {
     // Fujitsu
     {0x04, 0x0101, 2 * 1024UL, false},  // MB85RS16
     {0x04, 0x0302, 8 * 1024UL, false},  // MB85RS64V
+    {0x04, 0x2302, 8 * 1024UL, true},   // MB85RS64VYPNF
     {0x04, 0x2303, 8 * 1024UL, true},   // MB85RS64T
     {0x04, 0x2503, 32 * 1024UL, true},  // MB85RS256TY
     {0x04, 0x2703, 128 * 1024UL, true}, // MB85RS1MT
